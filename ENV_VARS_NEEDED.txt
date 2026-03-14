@@ -1,0 +1,24 @@
+REQUIRED ENVIRONMENT VARIABLES FOR SUPABASE
+============================================
+
+Copy these two values from your Supabase project:
+
+1. NEXT_PUBLIC_SUPABASE_URL
+   - Location: Supabase Dashboard → Settings → API → Project URL
+   - Example: https://your-project.supabase.co
+   - This must start with https://
+
+2. NEXT_PUBLIC_SUPABASE_ANON_KEY
+   - Location: Supabase Dashboard → Settings → API → anon (public)
+   - Example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+   - This is a long JWT token
+
+WHERE TO ADD THEM:
+- In Vercel: Settings → Environment Variables
+- Add both for Production and Preview environments
+- Then redeploy your project
+
+IMPORTANT:
+- These are PUBLIC environment variables (NEXT_PUBLIC_ prefix)
+- They're safe to expose since they only have read access
+- Never add SUPABASE_SERVICE_ROLE_KEY as a public variable

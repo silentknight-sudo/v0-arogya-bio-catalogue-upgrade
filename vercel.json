@@ -1,0 +1,4 @@
+{
+  "buildCommand": "rm -f middleware.ts && npm run build",
+  "outputDirectory": ".next"
+}
