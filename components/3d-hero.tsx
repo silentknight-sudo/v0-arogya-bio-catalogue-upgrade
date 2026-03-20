@@ -81,7 +81,7 @@ export function Hero3D() {
       <Canvas
         camera={{ position: [0, 0, 5], fov: 75 }}
         className="w-full h-full"
-        style={{ touchAction: "none" }}
+        style={{ touchAction: isMobile ? "auto" : "none" }}
       >
         {!isMobile && (
           <OrbitControls 

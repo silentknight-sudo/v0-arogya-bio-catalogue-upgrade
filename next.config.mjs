@@ -6,10 +6,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  // Force rebuild to clear cache - middleware.ts was removed
-  experimental: {
-    proxyNextAssetsCacheBuster: true,
-  },
 }
 
 export default nextConfig
