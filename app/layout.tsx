@@ -1,8 +1,10 @@
 import type React from "react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
+import { LocalSEOSchema } from "@/components/local-seo-schema"
+import { GoogleAnalytics } from "@/components/google-analytics"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -84,12 +86,13 @@ export const metadata: Metadata = {
     shortcut: "/arogya-bio-logo.png",
     apple: "/arogya-bio-logo.png",
   },
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
+}
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
 }
 
 export default function RootLayout({
@@ -159,6 +162,8 @@ export default function RootLayout({
         />
       </head>
       <body className={`font-sans antialiased`}>
+        <GoogleAnalytics />
+        <LocalSEOSchema />
         {children}
         <Analytics />
       </body>

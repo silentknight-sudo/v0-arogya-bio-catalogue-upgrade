@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Heart, ShoppingCart, Truck, Shield, RotateCcw } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 import Link from "next/link"
+import { ProductSchema } from "@/components/product-schema"
 
 interface Product {
   id: string
@@ -121,6 +122,18 @@ export default function ProductDetailPage() {
 
   return (
     <main className="min-h-screen bg-background">
+      {product && (
+        <ProductSchema
+          id={product.id}
+          name={product.name}
+          description={product.description}
+          price={product.price}
+          image_url={product.image_url}
+          rating={4.5}
+          reviewCount={100}
+          category={product.category}
+        />
+      )}
       <Header />
 
       <div className="container mx-auto px-4 py-8">
