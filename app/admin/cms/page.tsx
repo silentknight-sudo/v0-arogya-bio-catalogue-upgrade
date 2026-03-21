@@ -13,8 +13,19 @@ interface CMSSetting {
   section: string
 }
 
+interface Banner {
+  id: number
+  url: string
+  alt: string
+}
+
 export default function CMSPage() {
   const [settings, setSettings] = useState<CMSSetting[]>([])
+  const [banners, setBanners] = useState<Banner[]>([
+    { id: 1, url: "", alt: "Banner 1" },
+    { id: 2, url: "", alt: "Banner 2" },
+    { id: 3, url: "", alt: "Banner 3" },
+  ])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -63,8 +74,9 @@ export default function CMSPage() {
   const handleSaveSettings = async () => {
     try {
       setSaving(true)
-      console.log("[v0] Saving CMS settings...")
+      console.log("[v0] Saving CMS settings and banners...")
 
+      // Save settings
       for (const setting of settings) {
         const response = await fetch("/api/admin/cms", {
           method: "PATCH",
@@ -83,7 +95,23 @@ export default function CMSPage() {
         }
       }
 
-      console.log("[v0] All settings saved successfully")
+      // Save banners
+      for (const banner of banners) {
+        if (banner.url) {
+          await fetch("/api/admin/cms", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              key: `banner_${banner.id}`,
+              value: banner.url,
+              section: "Banners",
+            }),
+          })
+        }
+      }
+
+      console.log("[v0] All settings and banners saved successfully")
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (error) {
@@ -92,6 +120,10 @@ export default function CMSPage() {
     } finally {
       setSaving(false)
     }
+  }
+
+  const handleBannerChange = (bannerId: number, url: string) => {
+    setBanners(banners.map((b) => (b.id === bannerId ? { ...b, url } : b)))
   }
 
   const handleAddNewSetting = async () => {
@@ -192,6 +224,54 @@ export default function CMSPage() {
             <div className="text-center py-12">Loading settings...</div>
           ) : (
             <div className="space-y-6">
+              {/* Banner Management - ALWAYS VISIBLE */}
+              <div className="bg-white rounded-lg shadow-sm p-6 border-2 border-primary/20">
+                <h2 className="text-2xl font-bold text-foreground mb-6">🖼️ Landing Page Banners</h2>
+                <div className="space-y-6">
+                  {banners.map((banner) => (
+                    <div key={banner.id} className="pb-6 border-b-2 border-gray-200 last:border-0">
+                      <label className="block text-base font-bold text-foreground mb-3 capitalize">
+                        {banner.alt} Upload
+                      </label>
+                      <div className="space-y-3">
+                        <div>
+                          <input
+                            type="text"
+                            placeholder={`Paste image URL for ${banner.alt} (e.g., https://example.com/banner.jpg or Google Drive link)`}
+                            value={banner.url}
+                            onChange={(e) => {
+                              handleBannerChange(banner.id, e.target.value)
+                              console.log(`[v0] Banner ${banner.id} URL updated: ${e.target.value}`)
+                            }}
+                            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+                          />
+                          <p className="text-xs text-muted-foreground mt-1">Enter a valid image URL. Preview will appear below.</p>
+                        </div>
+                        {banner.url && (
+                          <div className="mt-4">
+                            <p className="text-sm font-semibold text-foreground mb-2">Preview:</p>
+                            <img
+                              src={banner.url}
+                              alt={banner.alt}
+                              className="w-full h-48 object-cover rounded-lg border-2 border-gray-200"
+                              onError={(e) => {
+                                console.log(`[v0] Failed to load image for ${banner.alt}`)
+                                ;(e.target as HTMLImageElement).style.display = "none"
+                              }}
+                            />
+                          </div>
+                        )}
+                        {!banner.url && (
+                          <div className="w-full h-40 bg-gray-100 rounded-lg border-2 border-dashed border-gray-300 flex items-center justify-center">
+                            <p className="text-muted-foreground">Image preview will appear here</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Add New Setting Form */}
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex justify-between items-center mb-4">
