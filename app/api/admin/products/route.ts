@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { name, category, price, description, benefits, usage, stock_quantity, image_url } = body
+    const { name, category, price, sale_price, mrp, description, benefits, usage, stock_quantity, image_url } = body
 
     // Validation
     if (!name || !category || price === undefined || stock_quantity === undefined) {
@@ -96,6 +96,8 @@ export async function POST(request: NextRequest) {
         name,
         category,
         price: Number(price),
+        sale_price: sale_price ? Number(sale_price) : null,
+        mrp: mrp ? Number(mrp) : null,
         description: description || "",
         benefits: Array.isArray(benefits) ? benefits : [benefits || ""],
         usage: usage || "",
@@ -141,6 +143,8 @@ export async function PATCH(request: NextRequest) {
 
     // Convert numeric fields
     if (updateData.price !== undefined) updateData.price = Number(updateData.price)
+    if (updateData.sale_price !== undefined) updateData.sale_price = updateData.sale_price ? Number(updateData.sale_price) : null
+    if (updateData.mrp !== undefined) updateData.mrp = updateData.mrp ? Number(updateData.mrp) : null
     if (updateData.stock_quantity !== undefined) updateData.stock_quantity = Number(updateData.stock_quantity)
 
     const supabase = await createClient({ roleOverride: "admin" })
