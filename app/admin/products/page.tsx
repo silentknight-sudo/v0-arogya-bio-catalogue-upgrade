@@ -24,6 +24,7 @@ interface FormData {
   name: string
   category: string
   price: string
+  mrp: string
   description: string
   benefits: string
   usage: string
@@ -44,6 +45,7 @@ export default function ProductsPage() {
     name: "",
     category: "",
     price: "",
+    mrp: "",
     description: "",
     benefits: "",
     usage: "",
@@ -103,6 +105,7 @@ export default function ProductsPage() {
       name: "",
       category: "",
       price: "",
+      mrp: "",
       description: "",
       benefits: "",
       usage: "",
@@ -161,6 +164,7 @@ export default function ProductsPage() {
       name: product.name,
       category: product.category,
       price: product.price.toString(),
+      mrp: (product as any).mrp?.toString() || "",
       description: product.description,
       benefits: product.benefits.join(", "),
       usage: product.usage,
@@ -204,6 +208,7 @@ export default function ProductsPage() {
         name: formData.name,
         category: formData.category,
         price: Number.parseFloat(formData.price),
+        mrp: formData.mrp ? Number.parseFloat(formData.mrp) : null,
         description: formData.description,
         benefits: benefitsArray,
         usage: formData.usage,
@@ -375,13 +380,25 @@ export default function ProductsPage() {
                     <label className="block text-sm font-semibold text-foreground mb-2">Price (₹) *</label>
                     <input
                       type="number"
-                      placeholder="0.00"
+                      placeholder="900"
                       step="0.01"
                       value={formData.price}
                       onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                       className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                       required
                     />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-foreground mb-2">MRP (₹)</label>
+                    <input
+                      type="number"
+                      placeholder="1080"
+                      step="0.01"
+                      value={formData.mrp}
+                      onChange={(e) => setFormData({ ...formData, mrp: e.target.value })}
+                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">Original/maximum retail price shown on website</p>
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-foreground mb-2">Stock Quantity *</label>

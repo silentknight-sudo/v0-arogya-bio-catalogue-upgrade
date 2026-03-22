@@ -19,6 +19,7 @@ interface Product {
   name: string
   category: string
   price: number
+  mrp?: number
   description: string
   image_url: string
   stock_quantity: number
@@ -137,7 +138,7 @@ export default function Home() {
                       id: product.id,
                       name: product.name,
                       price: product.price,
-                      originalPrice: product.price * 1.2,
+                      originalPrice: (product as any).mrp || product.price * 1.2,
                       rating: 4.5,
                       image: product.image_url,
                     }}
