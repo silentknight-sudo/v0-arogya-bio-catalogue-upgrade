@@ -24,8 +24,6 @@ interface FormData {
   name: string
   category: string
   price: string
-  sale_price: string
-  mrp: string
   description: string
   benefits: string
   usage: string
@@ -46,8 +44,6 @@ export default function ProductsPage() {
     name: "",
     category: "",
     price: "",
-    sale_price: "",
-    mrp: "",
     description: "",
     benefits: "",
     usage: "",
@@ -107,8 +103,6 @@ export default function ProductsPage() {
       name: "",
       category: "",
       price: "",
-      sale_price: "",
-      mrp: "",
       description: "",
       benefits: "",
       usage: "",
@@ -167,8 +161,6 @@ export default function ProductsPage() {
       name: product.name,
       category: product.category,
       price: product.price.toString(),
-      sale_price: (product as any).sale_price?.toString() || "",
-      mrp: (product as any).mrp?.toString() || "",
       description: product.description,
       benefits: product.benefits.join(", "),
       usage: product.usage,
@@ -212,8 +204,6 @@ export default function ProductsPage() {
         name: formData.name,
         category: formData.category,
         price: Number.parseFloat(formData.price),
-        sale_price: formData.sale_price ? Number.parseFloat(formData.sale_price) : null,
-        mrp: formData.mrp ? Number.parseFloat(formData.mrp) : null,
         description: formData.description,
         benefits: benefitsArray,
         usage: formData.usage,
@@ -380,30 +370,7 @@ export default function ProductsPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-4 gap-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-foreground mb-2">MRP (₹)</label>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      step="0.01"
-                      value={formData.mrp}
-                      onChange={(e) => setFormData({ ...formData, mrp: e.target.value })}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-foreground mb-2">Sale Price (₹) *</label>
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      step="0.01"
-                      value={formData.sale_price}
-                      onChange={(e) => setFormData({ ...formData, sale_price: e.target.value })}
-                      className="w-full px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                      required
-                    />
-                  </div>
+                <div className="grid grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-foreground mb-2">Price (₹) *</label>
                     <input
