@@ -10,8 +10,6 @@ interface Product {
   id: string
   name: string
   price: number
-  sale_price?: number
-  mrp?: number
   originalPrice: number
   rating: number
   badge?: string
@@ -93,27 +91,10 @@ export default function ProductCard({ product, isInWishlist, onWishlistToggle }:
     }
   }
 
-  // Calculate discount percentage
-  const calculateDiscount = () => {
-    if (product.mrp && product.sale_price) {
-      const discount = ((product.mrp - product.sale_price) / product.mrp) * 100
-      return Math.round(discount)
-    }
-    return 0
-  }
-
-  const discountPercentage = calculateDiscount()
-
   return (
     <div className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow overflow-hidden group">
       {/* Image Container */}
       <div className="relative overflow-hidden h-64 bg-secondary/30">
-        {/* Discount Badge */}
-        {discountPercentage > 0 && (
-          <div className="absolute top-3 right-3 z-10 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
-            {discountPercentage}% OFF
-          </div>
-        )}
         <img
           src={product.image || "/placeholder.svg"}
           alt={product.name}
