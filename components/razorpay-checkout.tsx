@@ -46,7 +46,7 @@ export function RazorpayCheckout({ cartItems, onSuccess, onError }: RazorpayChec
           order_id: sessionData.orderId,
           name: "ArogyaBio",
           description: "Premium Ayurvedic Wellness Products",
-          image: "/arogya-bio-logo.png",
+          image: "/arogya-bio-logo.jpg",
           handler: async (response: any) => {
             console.log("[v0] Payment handler called with response:", response)
 
