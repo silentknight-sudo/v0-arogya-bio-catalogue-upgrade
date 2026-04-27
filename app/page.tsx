@@ -12,6 +12,8 @@ import { PremiumShowcase } from "@/components/premium-showcase"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 import { useRealtimeProducts } from "@/hooks/use-realtime-products"
+import { SchemaMarkup, MultipleSchemaMarkup } from "@/components/seo-schema"
+import { createBreadcrumbSchema, createProductSchema } from "@/lib/seo-schemas"
 import { ArrowRight, Leaf, Award, TrendingUp, Users, Package, Sparkles } from "lucide-react"
 
 interface Product {
@@ -29,6 +31,13 @@ export default function Home() {
   const { products, loading: productsLoading } = useRealtimeProducts()
   const [productsByCategory, setProductsByCategory] = useState<Record<string, Product[]>>({})
   const [wishlist, setWishlist] = useState<string[]>([])
+
+  // Generate breadcrumb schema
+  const breadcrumbSchema = createBreadcrumbSchema([
+    { name: "Home", url: "https://arogyabio.com" },
+    { name: "Shop", url: "https://arogyabio.com/shop" },
+    { name: "Catalogue", url: "https://arogyabio.com/catalogue" },
+  ])
 
   useEffect(() => {
     // Organize products by category whenever products change
@@ -54,6 +63,15 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
+      <SchemaMarkup schema={breadcrumbSchema} />
+      {/* Product Schema for Featured Products */}
+      {products.slice(0, 5).length > 0 && (
+        <MultipleSchemaMarkup
+          schemas={products
+            .slice(0, 5)
+            .map((product) => createProductSchema(product))}
+        />
+      )}
       <Header />
 
       {/* 3D Hero Section */}
