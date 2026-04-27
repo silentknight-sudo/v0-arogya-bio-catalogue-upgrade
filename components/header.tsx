@@ -70,7 +70,7 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 md:gap-3 flex-shrink-0">
             <img 
-              src="/arogya-bio-logo.png" 
+              src="/arogya-bio-logo.jpg" 
               alt="ArogyaBio Logo"
               className="w-8 md:w-12 h-8 md:h-12 object-contain"
             />
