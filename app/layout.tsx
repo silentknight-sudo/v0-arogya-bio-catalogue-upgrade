@@ -83,10 +83,7 @@ export const metadata: Metadata = {
   },
   generator: "v0.app",
   icons: {
-    icon: [
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/arogya-bio-logo.jpg", type: "image/jpeg", sizes: "192x192" },
-    ],
+    icon: "/favicon.ico",
     apple: "/arogya-bio-logo.jpg",
     shortcut: "/favicon.ico",
   },
