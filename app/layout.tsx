@@ -6,6 +6,8 @@ import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { LocalSEOSchema } from "@/components/local-seo-schema"
 import { GoogleAnalytics } from "@/components/google-analytics"
+import { MultipleSchemaMarkup } from "@/components/seo-schema"
+import { createOrganizationSchema, createLocalBusinessSchema, createFAQSchema } from "@/lib/seo-schemas"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -167,6 +169,35 @@ export default function RootLayout({
           <GoogleAnalytics />
         </Suspense>
         <LocalSEOSchema />
+        <MultipleSchemaMarkup
+          schemas={[
+            createOrganizationSchema(),
+            createLocalBusinessSchema(),
+            createFAQSchema([
+              {
+                question: "What are Ayurvedic products?",
+                answer:
+                  "Ayurvedic products are natural wellness solutions based on the ancient Indian system of Ayurveda, using herbs and natural ingredients to promote health and wellness.",
+              },
+              {
+                question: "Are ArogyaBio products certified?",
+                answer: "Yes, all ArogyaBio products are certified and authentic Ayurvedic medicines sourced from trusted suppliers.",
+              },
+              {
+                question: "Do you deliver across India?",
+                answer: "Yes, we deliver premium Ayurvedic products across India with fast and reliable shipping.",
+              },
+              {
+                question: "What payment methods do you accept?",
+                answer: "We accept all major payment methods including credit cards, debit cards, UPI, and net banking through Razorpay.",
+              },
+              {
+                question: "How can I contact ArogyaBio?",
+                answer: "You can reach us at +91-8447386076 or email us at info@arogyabio.com for any queries.",
+              },
+            ]),
+          ]}
+        />
         {children}
         <Analytics />
       </body>
