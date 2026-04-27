@@ -47,7 +47,7 @@ export const metadata: Metadata = {
         url: "https://arogyabio.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "ArogyaBio - Premium Ayurvedic Products",
+        alt: "ArogyaBio - Premium Ayurvedic Products Online India",
         type: "image/png",
       },
     ],
@@ -83,9 +83,12 @@ export const metadata: Metadata = {
   },
   generator: "v0.app",
   icons: {
-    icon: "/arogya-bio-logo.png",
-    shortcut: "/arogya-bio-logo.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/arogya-bio-logo.png", type: "image/png", sizes: "192x192" },
+    ],
     apple: "/arogya-bio-logo.png",
+    shortcut: "/favicon.ico",
   },
 }
 
