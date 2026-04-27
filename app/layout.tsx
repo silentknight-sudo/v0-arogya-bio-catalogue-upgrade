@@ -85,9 +85,9 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
-      { url: "/arogya-bio-logo.png", type: "image/png", sizes: "192x192" },
+      { url: "/arogya-bio-logo.jpg", type: "image/jpeg", sizes: "192x192" },
     ],
-    apple: "/arogya-bio-logo.png",
+    apple: "/arogya-bio-logo.jpg",
     shortcut: "/favicon.ico",
   },
 }
