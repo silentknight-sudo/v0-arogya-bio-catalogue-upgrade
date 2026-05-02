@@ -9,6 +9,7 @@ import { Hero3D } from "@/components/3d-hero"
 import { ImageSlider } from "@/components/image-slider"
 import { Product3DGrid } from "@/components/3d-product-showcase"
 import { PremiumShowcase } from "@/components/premium-showcase"
+import { CustomerReviews } from "@/components/customer-reviews"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase/client"
 import { useRealtimeProducts } from "@/hooks/use-realtime-products"
@@ -262,6 +263,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Customer Reviews Section */}
+      <CustomerReviews />
 
       {/* Newsletter - Compact */}
       <section className="py-6 md:py-8 bg-secondary/30">
