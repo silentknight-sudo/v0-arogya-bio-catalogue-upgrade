@@ -7,6 +7,7 @@ import "./globals.css"
 import { LocalSEOSchema } from "@/components/local-seo-schema"
 import { GoogleAnalytics } from "@/components/google-analytics"
 import { MultipleSchemaMarkup } from "@/components/seo-schema"
+import { GoutPromoPopup } from "@/components/gout-promo-popup"
 import { createOrganizationSchema, createLocalBusinessSchema, createFAQSchema } from "@/lib/seo-schemas"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -202,6 +203,7 @@ export default function RootLayout({
             ]),
           ]}
         />
+        <GoutPromoPopup />
         {children}
         <Analytics />
       </body>
