@@ -18,8 +18,9 @@ Allow: /about/
 Allow: /contact/
 Allow: /faq/
 
-# Sitemap location
+# Sitemap locations
 Sitemap: https://arogyabio.com/sitemap.xml
+Sitemap: https://arogyabio.com/image-sitemap.xml
 
 # Crawl delay
 Crawl-delay: 1
