@@ -85,9 +85,12 @@ export const metadata: Metadata = {
   },
   generator: "v0.app",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/arogya-bio-logo.jpg", type: "image/jpeg", sizes: "192x192" },
+      { url: "/favicon.ico", sizes: "32x32" },
+    ],
     apple: "/arogya-bio-logo.jpg",
-    shortcut: "/favicon.ico",
+    shortcut: "/arogya-bio-logo.jpg",
   },
 }
 
@@ -109,7 +112,8 @@ export default function RootLayout({
     "@type": "Organization",
     name: "ArogyaBio",
     url: "https://arogyabio.com",
-    logo: "https://arogyabio.com/arogya-bio-logo.png",
+    logo: "https://arogyabio.com/arogya-bio-logo.jpg",
+    image: "https://arogyabio.com/arogya-bio-logo.jpg",
     description: "Premium Ayurvedic wellness products and herbal medicines",
     sameAs: [
       "https://www.facebook.com/arogyabio",
