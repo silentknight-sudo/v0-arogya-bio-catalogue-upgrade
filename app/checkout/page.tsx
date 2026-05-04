@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import { Suspense } from "react"
 import { useState, useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/header"
@@ -21,7 +22,7 @@ interface ComboItem {
   quantity: number
 }
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const searchParams = useSearchParams()
   const isComboCheckout = searchParams.get("combo") === "gout-health-combo"
   
@@ -45,7 +46,7 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     pincode: "",
-    paymentMethod: "card",
+    paymentMethod: "cod",
   })
 
   const supabase = createClient()
@@ -715,5 +716,19 @@ export default function CheckoutPage() {
 
       <Footer />
     </main>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-12 text-center">Loading checkout...</div>
+        <Footer />
+      </main>
+    }>
+      <CheckoutContent />
+    </Suspense>
   )
 }
