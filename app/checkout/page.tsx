@@ -1,12 +1,13 @@
 "use client"
 
 import type React from "react"
+import { Suspense } from "react"
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, MapPin, CreditCard, Package } from "lucide-react"
+import { CheckCircle2, MapPin, CreditCard, Package, ShoppingCart } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
 interface CartItem {
@@ -15,11 +16,21 @@ interface CartItem {
   products: { name: string; price: number }
 }
 
-export default function CheckoutPage() {
+interface ComboItem {
+  name: string
+  price: number
+  quantity: number
+}
+
+function CheckoutContent() {
+  const searchParams = useSearchParams()
+  const isComboCheckout = searchParams.get("combo") === "gout-health-combo"
+  
   const [currentStep, setCurrentStep] = useState(1)
   const [loading, setLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [comboItems, setComboItems] = useState<ComboItem[]>([])
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderId, setOrderId] = useState("")
   const [couponCode, setCouponCode] = useState("")
@@ -35,7 +46,7 @@ export default function CheckoutPage() {
     city: "",
     state: "",
     pincode: "",
-    paymentMethod: "card",
+    paymentMethod: "cod",
   })
 
   const supabase = createClient()
@@ -44,6 +55,17 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // If this is a combo checkout, skip auth and load combo data
+        if (isComboCheckout) {
+          setComboItems([
+            { name: "Gout Health Oil", price: 1249.5, quantity: 1 },
+            { name: "Gout Health Capsules", price: 1249.5, quantity: 1 },
+          ])
+          setIsAuthenticated(true)
+          setLoading(false)
+          return
+        }
+
         const {
           data: { user },
         } = await supabase.auth.getUser()
@@ -296,7 +318,18 @@ export default function CheckoutPage() {
     }
   }
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.products.price * item.quantity, 0)
+  // Calculate totals based on checkout type
+  let subtotal = 0
+  let items = cartItems
+
+  if (isComboCheckout) {
+    subtotal = comboItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    // Apply 20% combo discount
+    subtotal = subtotal * 0.8 // Already discounted to 1999
+  } else {
+    subtotal = cartItems.reduce((sum, item) => sum + item.products.price * item.quantity, 0)
+  }
+
   const shipping = subtotal > 2000 ? 0 : 150
   const tax = Math.round(subtotal * 0.18)
   const discount = appliedCoupon ? appliedCoupon.discount_amount : 0
@@ -462,14 +495,11 @@ export default function CheckoutPage() {
 
                   <div className="space-y-4">
                     {[
-                      { id: "card", name: "Credit/Debit Card", desc: "Visa, Mastercard, RuPay" },
-                      { id: "upi", name: "UPI", desc: "Google Pay, PhonePe, PayTM" },
-                      { id: "netbanking", name: "Net Banking", desc: "All major banks" },
                       { id: "cod", name: "Cash on Delivery", desc: "Pay when you receive" },
                     ].map((method) => (
                       <label
                         key={method.id}
-                        className="flex items-start gap-4 p-4 border border-border rounded-lg cursor-pointer hover:bg-secondary/20 transition-colors"
+                        className="flex items-start gap-4 p-4 border-2 border-green-500 bg-green-50 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
                       >
                         <input
                           type="radio"
@@ -478,9 +508,10 @@ export default function CheckoutPage() {
                           checked={formData.paymentMethod === method.id}
                           onChange={handleInputChange}
                           className="mt-1"
+                          defaultChecked
                         />
                         <div>
-                          <p className="font-semibold text-foreground">{method.name}</p>
+                          <p className="font-bold text-foreground text-lg">{method.name}</p>
                           <p className="text-sm text-muted-foreground">{method.desc}</p>
                         </div>
                       </label>
@@ -513,14 +544,25 @@ export default function CheckoutPage() {
                     <div>
                       <h3 className="font-semibold text-foreground mb-4">Order Items</h3>
                       <div className="space-y-3">
-                        {cartItems.map((item, idx) => (
-                          <div key={idx} className="flex justify-between text-muted-foreground">
-                            <span>
-                              {item.products.name} x{item.quantity}
-                            </span>
-                            <span>₹{item.products.price * item.quantity}</span>
-                          </div>
-                        ))}
+                        {isComboCheckout ? (
+                          comboItems.map((item, idx) => (
+                            <div key={idx} className="flex justify-between text-muted-foreground">
+                              <span>
+                                {item.name} x{item.quantity}
+                              </span>
+                              <span>₹{item.price * item.quantity}</span>
+                            </div>
+                          ))
+                        ) : (
+                          cartItems.map((item, idx) => (
+                            <div key={idx} className="flex justify-between text-muted-foreground">
+                              <span>
+                                {item.products.name} x{item.quantity}
+                              </span>
+                              <span>₹{item.products.price * item.quantity}</span>
+                            </div>
+                          ))
+                        )}
                       </div>
                     </div>
                   </div>
@@ -674,5 +716,19 @@ export default function CheckoutPage() {
 
       <Footer />
     </main>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <main className="min-h-screen bg-background">
+        <Header />
+        <div className="container mx-auto px-4 py-12 text-center">Loading checkout...</div>
+        <Footer />
+      </main>
+    }>
+      <CheckoutContent />
+    </Suspense>
   )
 }
