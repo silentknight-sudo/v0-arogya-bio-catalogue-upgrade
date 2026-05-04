@@ -25,7 +25,7 @@ const slides: Slide[] = [
     description: "Authentic ayurvedic herbs sourced and prepared with ancient wisdom",
   },
   {
-    image: "/placeholder.svg?height=1080&width=1920",
+    image: "/gout-combo-banner.jpg",
     title: "Gout Health Complete Combo",
     titleHi: "गाउट हेल्थ कम्पलीट कॉम्बो",
     description: "Oil + Capsules at 20% OFF - Only ₹1,999! Get complete relief with our premium combo.",
