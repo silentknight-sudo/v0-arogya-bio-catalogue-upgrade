@@ -52,6 +52,9 @@ export function ComboBanner({
     bottom: "fixed bottom-0 left-0 right-0 z-40",
   }
 
+  // Link to appropriate page based on language
+  const comboPageLink = isEnglish ? "/gout-combo" : "/gout-combo-hindi"
+
   return (
     <div
       className={`${positionClasses[position]} bg-gradient-to-r from-primary via-emerald-500 to-primary text-white shadow-xl`}
@@ -72,7 +75,7 @@ export function ComboBanner({
 
         {/* CTA Button and Close */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          <Link href="/gout-combo">
+          <Link href={comboPageLink}>
             <button className="bg-white text-primary hover:bg-white/90 font-bold px-4 py-2 rounded-lg flex items-center gap-2 text-xs md:text-sm whitespace-nowrap transition-all hover:shadow-lg">
               <ShoppingCart className="w-4 h-4" />
               {content.cta}
