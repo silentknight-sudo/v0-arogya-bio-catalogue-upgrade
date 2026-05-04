@@ -62,6 +62,12 @@ export default function Header() {
     { label: "Contact", href: "/contact" },
   ]
 
+  const comboLink = { 
+    label: "Gout Combo 20% Off", 
+    href: "/gout-combo",
+    isSpecial: true 
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       {/* Top Bar */}
@@ -168,7 +174,7 @@ export default function Header() {
 
       {/* Navigation Menu - Desktop */}
       <nav className="hidden md:flex border-t border-border/50 bg-background/50">
-        <div className="container mx-auto px-4 flex">
+        <div className="container mx-auto px-4 flex items-center">
           {navLinks.map((link) => (
             <Link 
               key={link.href}
@@ -178,6 +184,14 @@ export default function Header() {
               {link.label}
             </Link>
           ))}
+          
+          {/* Special Combo Offer Link */}
+          <Link 
+            href={comboLink.href}
+            className="px-6 py-3 mx-2 bg-gradient-to-r from-primary to-emerald-600 text-white text-sm font-bold rounded-full hover:shadow-lg hover:from-primary/90 hover:to-emerald-600/90 transition-all whitespace-nowrap"
+          >
+            {comboLink.label}
+          </Link>
         </div>
       </nav>
 
@@ -185,6 +199,15 @@ export default function Header() {
       {isMenuOpen && (
         <nav className="md:hidden border-t border-border/50 bg-background animate-in slide-in-from-top-2">
           <div className="container mx-auto px-3 py-3 space-y-1">
+            {/* Special Combo Offer Link - Mobile */}
+            <Link
+              href={comboLink.href}
+              onClick={() => setIsMenuOpen(false)}
+              className="block px-4 py-3 rounded-lg bg-gradient-to-r from-primary to-emerald-600 text-white text-sm font-bold text-center hover:shadow-lg hover:from-primary/90 hover:to-emerald-600/90 transition-all mb-2"
+            >
+              {comboLink.label}
+            </Link>
+
             {/* Navigation Links */}
             {navLinks.map((link) => (
               <Link

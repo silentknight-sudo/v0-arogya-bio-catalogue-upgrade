@@ -1,12 +1,21 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Zap, ShoppingCart } from "lucide-react"
+import Link from "next/link"
 
 interface Slide {
   image: string
   title: string
   description: string
+  titleHi?: string
+  descriptionHi?: string
+  cta?: {
+    text: string
+    textHi?: string
+    href: string
+  }
+  isPromo?: boolean
 }
 
 const slides: Slide[] = [
@@ -14,6 +23,19 @@ const slides: Slide[] = [
     image: "/ayurveda-hero-1.jpg",
     title: "Pure Herbals",
     description: "Authentic ayurvedic herbs sourced and prepared with ancient wisdom",
+  },
+  {
+    image: "/placeholder.svg?height=1080&width=1920",
+    title: "Gout Health Complete Combo",
+    titleHi: "गाउट हेल्थ कम्पलीट कॉम्बो",
+    description: "Oil + Capsules at 20% OFF - Only ₹1,999! Get complete relief with our premium combo.",
+    descriptionHi: "तेल + कैप्सूल 20% छूट पर - सिर्फ ₹1,999! हमारे प्रीमियम कॉम्बो से पूर्ण राहत पाएं।",
+    cta: {
+      text: "Shop Combo Now",
+      textHi: "कॉम्बो खरीदें",
+      href: "/gout-combo",
+    },
+    isPromo: true,
   },
   {
     image: "/ayurveda-hero-2.jpg",
@@ -92,6 +114,22 @@ export function ImageSlider() {
           <p className="text-lg md:text-2xl text-white max-w-2xl drop-shadow-lg bg-green-500/20 backdrop-blur-sm px-6 py-3 rounded-lg inline-block">
             {slides[currentSlide].description}
           </p>
+          
+          {/* Promo Badge and CTA */}
+          {slides[currentSlide].isPromo && slides[currentSlide].cta && (
+            <div className="mt-8 flex flex-col items-center gap-4">
+              <div className="inline-flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-full font-bold animate-pulse">
+                <Zap className="w-5 h-5" />
+                20% OFF LIMITED TIME
+              </div>
+              <Link href={slides[currentSlide].cta!.href}>
+                <button className="bg-gradient-to-r from-primary to-emerald-600 hover:from-primary/90 hover:to-emerald-600/90 text-white font-bold py-4 px-8 rounded-lg shadow-lg flex items-center gap-2 transition-all hover:shadow-xl">
+                  <ShoppingCart className="w-5 h-5" />
+                  {slides[currentSlide].cta!.text}
+                </button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
