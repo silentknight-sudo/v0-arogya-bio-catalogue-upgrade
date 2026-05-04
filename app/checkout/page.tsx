@@ -494,14 +494,11 @@ export default function CheckoutPage() {
 
                   <div className="space-y-4">
                     {[
-                      { id: "card", name: "Credit/Debit Card", desc: "Visa, Mastercard, RuPay" },
-                      { id: "upi", name: "UPI", desc: "Google Pay, PhonePe, PayTM" },
-                      { id: "netbanking", name: "Net Banking", desc: "All major banks" },
                       { id: "cod", name: "Cash on Delivery", desc: "Pay when you receive" },
                     ].map((method) => (
                       <label
                         key={method.id}
-                        className="flex items-start gap-4 p-4 border border-border rounded-lg cursor-pointer hover:bg-secondary/20 transition-colors"
+                        className="flex items-start gap-4 p-4 border-2 border-green-500 bg-green-50 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
                       >
                         <input
                           type="radio"
@@ -510,9 +507,10 @@ export default function CheckoutPage() {
                           checked={formData.paymentMethod === method.id}
                           onChange={handleInputChange}
                           className="mt-1"
+                          defaultChecked
                         />
                         <div>
-                          <p className="font-semibold text-foreground">{method.name}</p>
+                          <p className="font-bold text-foreground text-lg">{method.name}</p>
                           <p className="text-sm text-muted-foreground">{method.desc}</p>
                         </div>
                       </label>

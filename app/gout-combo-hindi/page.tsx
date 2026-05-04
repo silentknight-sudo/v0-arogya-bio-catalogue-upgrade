@@ -137,6 +137,75 @@ export default function GoutComboHindiPage() {
         </div>
       </section>
 
+      {/* Cash on Delivery - COD Available Section */}
+      <section className="py-12 px-4 bg-gradient-to-r from-green-600 to-emerald-600">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            {/* COD Image */}
+            <div>
+              <Image
+                src="/cash-on-delivery.jpg"
+                alt="कैश ऑन डिलीवरी - घर पर पेमेंट करें"
+                width={400}
+                height={400}
+                className="w-full h-auto rounded-2xl shadow-2xl"
+              />
+            </div>
+
+            {/* COD Benefits */}
+            <div className="text-white">
+              <h2 className="text-4xl md:text-5xl font-black mb-6">💰 कैश ऑन डिलीवरी उपलब्ध!</h2>
+              <p className="text-xl font-bold mb-8">
+                घर बैठे सीधे डिलीवरी पर्सन को नकद पैसे दें। कोई ऑनलाइन पेमेंट की जरूरत नहीं!
+              </p>
+
+              <div className="space-y-4">
+                <div className="flex items-start gap-4 bg-white/20 backdrop-blur p-4 rounded-xl">
+                  <Check className="w-6 h-6 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-bold text-lg">100% सुरक्षित</p>
+                    <p className="text-sm text-white/90">डिलीवरी के समय ही पेमेंट करें</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 bg-white/20 backdrop-blur p-4 rounded-xl">
+                  <Check className="w-6 h-6 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-bold text-lg">कोई छिपी फीस नहीं</p>
+                    <p className="text-sm text-white/90">कीमत वही ₹1,999 रहेगी</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 bg-white/20 backdrop-blur p-4 rounded-xl">
+                  <Check className="w-6 h-6 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-bold text-lg">पूरे भारत में उपलब्ध</p>
+                    <p className="text-sm text-white/90">शहर हो या गांव, हर जगह सुविधा</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 bg-white/20 backdrop-blur p-4 rounded-xl">
+                  <Check className="w-6 h-6 flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-bold text-lg">तुरंत डिलीवरी</p>
+                    <p className="text-sm text-white/90">3-5 दिनों में आपके दरवाजे पर</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 bg-white/30 backdrop-blur border-2 border-white rounded-xl p-6">
+                <p className="text-center font-black text-2xl">
+                  आपका घर = आपका बैंक
+                </p>
+                <p className="text-center text-sm mt-2 text-white/90">
+                  कैश ऑन डिलीवरी से शॉपिंग सबसे आसान है
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Details Image Section */}
       <section className="py-12 px-4 bg-white">
         <div className="container mx-auto">
