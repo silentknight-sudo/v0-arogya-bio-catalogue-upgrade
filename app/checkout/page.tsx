@@ -2,11 +2,11 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
-import { CheckCircle2, MapPin, CreditCard, Package } from "lucide-react"
+import { CheckCircle2, MapPin, CreditCard, Package, ShoppingCart } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
 interface CartItem {
@@ -15,11 +15,21 @@ interface CartItem {
   products: { name: string; price: number }
 }
 
+interface ComboItem {
+  name: string
+  price: number
+  quantity: number
+}
+
 export default function CheckoutPage() {
+  const searchParams = useSearchParams()
+  const isComboCheckout = searchParams.get("combo") === "gout-health-combo"
+  
   const [currentStep, setCurrentStep] = useState(1)
   const [loading, setLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [comboItems, setComboItems] = useState<ComboItem[]>([])
   const [orderPlaced, setOrderPlaced] = useState(false)
   const [orderId, setOrderId] = useState("")
   const [couponCode, setCouponCode] = useState("")
@@ -44,6 +54,17 @@ export default function CheckoutPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // If this is a combo checkout, skip auth and load combo data
+        if (isComboCheckout) {
+          setComboItems([
+            { name: "Gout Health Oil", price: 1249.5, quantity: 1 },
+            { name: "Gout Health Capsules", price: 1249.5, quantity: 1 },
+          ])
+          setIsAuthenticated(true)
+          setLoading(false)
+          return
+        }
+
         const {
           data: { user },
         } = await supabase.auth.getUser()
@@ -296,7 +317,18 @@ export default function CheckoutPage() {
     }
   }
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.products.price * item.quantity, 0)
+  // Calculate totals based on checkout type
+  let subtotal = 0
+  let items = cartItems
+
+  if (isComboCheckout) {
+    subtotal = comboItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    // Apply 20% combo discount
+    subtotal = subtotal * 0.8 // Already discounted to 1999
+  } else {
+    subtotal = cartItems.reduce((sum, item) => sum + item.products.price * item.quantity, 0)
+  }
+
   const shipping = subtotal > 2000 ? 0 : 150
   const tax = Math.round(subtotal * 0.18)
   const discount = appliedCoupon ? appliedCoupon.discount_amount : 0
@@ -513,14 +545,25 @@ export default function CheckoutPage() {
                     <div>
                       <h3 className="font-semibold text-foreground mb-4">Order Items</h3>
                       <div className="space-y-3">
-                        {cartItems.map((item, idx) => (
-                          <div key={idx} className="flex justify-between text-muted-foreground">
-                            <span>
-                              {item.products.name} x{item.quantity}
-                            </span>
-                            <span>₹{item.products.price * item.quantity}</span>
-                          </div>
-                        ))}
+                        {isComboCheckout ? (
+                          comboItems.map((item, idx) => (
+                            <div key={idx} className="flex justify-between text-muted-foreground">
+                              <span>
+                                {item.name} x{item.quantity}
+                              </span>
+                              <span>₹{item.price * item.quantity}</span>
+                            </div>
+                          ))
+                        ) : (
+                          cartItems.map((item, idx) => (
+                            <div key={idx} className="flex justify-between text-muted-foreground">
+                              <span>
+                                {item.products.name} x{item.quantity}
+                              </span>
+                              <span>₹{item.products.price * item.quantity}</span>
+                            </div>
+                          ))
+                        )}
                       </div>
                     </div>
                   </div>
