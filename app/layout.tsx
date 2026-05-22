@@ -107,28 +107,42 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  // Organization Schema
+  // Organization Schema with enhanced details
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "ArogyaBio",
+    alternateName: "Arogya Bio",
     url: "https://arogyabio.com",
     logo: "https://arogyabio.com/arogya-bio-logo.jpg",
-    image: "https://arogyabio.com/arogya-bio-logo.jpg",
-    description: "Premium Ayurvedic wellness products and herbal medicines",
+    image: "https://arogyabio.com/og-image.png",
+    description: "Premium Ayurvedic wellness products and herbal medicines online in India",
+    brand: {
+      "@type": "Brand",
+      name: "ArogyaBio",
+    },
     sameAs: [
       "https://www.facebook.com/arogyabio",
       "https://www.instagram.com/arogyabio",
       "https://www.twitter.com/arogyabio",
     ],
-    contactPoint: {
-      "@type": "ContactPoint",
-      contactType: "Customer Service",
-      telephone: "+91-8447386076",
-      email: "official.arogyabio@gmail.com",
-      areaServed: "IN",
-      availableLanguage: ["en", "hi"],
-    },
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "Customer Service",
+        telephone: "+91-8447386076",
+        email: "official.arogyabio@gmail.com",
+        areaServed: "IN",
+        availableLanguage: ["en", "hi"],
+        contactOption: "TollFree",
+      },
+      {
+        "@type": "ContactPoint",
+        contactType: "Sales",
+        telephone: "+91-8447386076",
+        email: "sales@arogyabio.com",
+      },
+    ],
     address: {
       "@type": "PostalAddress",
       streetAddress: "68, FF1, The Hemisphere Galleria, Sector 27",
@@ -145,6 +159,8 @@ export default function RootLayout({
     "@type": "WebSite",
     name: "ArogyaBio",
     url: "https://arogyabio.com",
+    image: "https://arogyabio.com/og-image.png",
+    description: "Shop premium Ayurvedic products online in India",
     potentialAction: {
       "@type": "SearchAction",
       target: {
@@ -152,6 +168,38 @@ export default function RootLayout({
         urlTemplate: "https://arogyabio.com/shop?search={search_term_string}",
       },
       "query-input": "required name=search_term_string",
+    },
+  }
+
+  // LocalBusiness Schema
+  const localBusinessSchema = {
+    "@context": "https://schema.org",
+    "@type": ["LocalBusiness", "Store"],
+    name: "ArogyaBio",
+    image: "https://arogyabio.com/arogya-bio-logo.jpg",
+    description: "Premium Ayurvedic wellness products and herbal medicines in India",
+    url: "https://arogyabio.com",
+    telephone: "+91-8447386076",
+    email: "official.arogyabio@gmail.com",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "68, FF1, The Hemisphere Galleria, Sector 27",
+      addressLocality: "Greater Noida",
+      addressRegion: "Uttar Pradesh",
+      postalCode: "201310",
+      addressCountry: "IN",
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "IN",
+    },
+    priceRange: "₹500 - ₹10000",
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      ratingCount: "500",
+      bestRating: "5",
+      worstRating: "1",
     },
   }
 
@@ -167,6 +215,11 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+        />
+        {/* LocalBusiness Schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
       </head>
       <body className={`font-sans antialiased`}>
