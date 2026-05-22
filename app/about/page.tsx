@@ -1,8 +1,30 @@
+import { Metadata } from "next"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Award, Leaf, Heart, Users, Shield, Zap, Droplets, Target } from "lucide-react"
 import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "About ArogyaBio - Authentic Ayurvedic Wellness | Premium Herbal Products",
+  description: "Learn about ArogyaBio's mission to provide authentic Ayurvedic wellness solutions. Blending ancient wisdom with modern science for your health.",
+  keywords: "about arogyabio, ayurvedic wellness, herbal medicine company, authentic ayurveda",
+  canonical: "https://arogyabio.com/about",
+  openGraph: {
+    title: "About ArogyaBio - Authentic Ayurvedic Wellness",
+    description: "Blending centuries of Ayurvedic wisdom with modern scientific research.",
+    type: "website",
+    url: "https://arogyabio.com/about",
+    images: [
+      {
+        url: "https://arogyabio.com/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "About ArogyaBio",
+      },
+    ],
+  },
+}
 
 export default function AboutPage() {
   return (
