@@ -19,6 +19,29 @@ interface Product {
   suitable_for?: string
 }
 
+export function generateMetadata() {
+  return {
+    title: "Ayurvedic Products Catalogue - Natural Herbal Remedies | ArogyaBio",
+    description: "Explore our comprehensive catalogue of authentic Ayurvedic products. Bone health, respiratory care, digestive wellness, and more. 100% natural herbal remedies.",
+    keywords: "ayurvedic products catalogue, herbal remedies, natural medicines, bone health, respiratory care, digestive wellness",
+    canonical: "https://arogyabio.com/catalogue",
+    openGraph: {
+      title: "Ayurvedic Products Catalogue | ArogyaBio",
+      description: "Browse our collection of authentic Ayurvedic products for complete wellness.",
+      type: "website",
+      url: "https://arogyabio.com/catalogue",
+      images: [
+        {
+          url: "https://arogyabio.com/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "ArogyaBio Product Catalogue",
+        },
+      ],
+    },
+  }
+}
+
 const products: Product[] = [
   // Bone Health (3 products)
   {

@@ -7,6 +7,29 @@ import Footer from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import { Mail, Phone, MapPin } from "lucide-react"
 
+export function generateMetadata() {
+  return {
+    title: "Contact ArogyaBio - Get in Touch | Customer Support",
+    description: "Contact ArogyaBio for queries, support, or partnerships. We're here to help! Call +91-8447386076 or email us.",
+    keywords: "contact arogyabio, customer support, ayurvedic help, contact form",
+    canonical: "https://arogyabio.com/contact",
+    openGraph: {
+      title: "Contact ArogyaBio",
+      description: "Get in touch with ArogyaBio customer support team.",
+      type: "website",
+      url: "https://arogyabio.com/contact",
+      images: [
+        {
+          url: "https://arogyabio.com/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "Contact ArogyaBio",
+        },
+      ],
+    },
+  }
+}
+
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",

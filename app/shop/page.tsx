@@ -18,6 +18,35 @@ interface Product {
   rating?: number
 }
 
+export function generateMetadata() {
+  return {
+    title: "Shop - Premium Ayurvedic Products | ArogyaBio",
+    description: "Browse our collection of authentic, certified Ayurvedic wellness products. Free shipping on orders above ₹2000. Shop natural herbal medicines online in India.",
+    keywords: "ayurvedic products, herbal medicines, wellness, natural health, buy ayurvedic online",
+    canonical: "https://arogyabio.com/shop",
+    openGraph: {
+      title: "Shop - Premium Ayurvedic Products | ArogyaBio",
+      description: "Browse our collection of authentic, certified Ayurvedic wellness products.",
+      type: "website",
+      url: "https://arogyabio.com/shop",
+      images: [
+        {
+          url: "https://arogyabio.com/og-image.png",
+          width: 1200,
+          height: 630,
+          alt: "ArogyaBio Ayurvedic Products",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: "Shop - Premium Ayurvedic Products | ArogyaBio",
+      description: "Browse our collection of authentic, certified Ayurvedic wellness products.",
+      images: ["https://arogyabio.com/og-image.png"],
+    },
+  }
+}
+
 export default function ShopPage() {
   const { products, loading } = useRealtimeProducts()
   const [sortBy, setSortBy] = useState("popular")

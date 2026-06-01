@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas.org/sitemap-image/1.1">
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://arogyabio.com</loc>
     <image:image>
@@ -28,6 +28,35 @@
       <image:loc>https://arogyabio.com/arogya-bio-logo.jpg</image:loc>
       <image:title>ArogyaBio Catalogue</image:title>
       <image:caption>Complete catalogue of Ayurvedic products and wellness solutions</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://arogyabio.com/gout-combo-hindi</loc>
+    <image:image>
+      <image:loc>https://arogyabio.com/gout-combo-hero.jpg</image:loc>
+      <image:title>गाउट हेल्थ कॉम्बो - Gout Health Combo</image:title>
+      <image:caption>20% discount on Gout Health complete care combo</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://arogyabio.com/gout-combo-details.png</image:loc>
+      <image:title>Gout Health Combo Benefits</image:title>
+      <image:caption>Complete gout relief solution with oil and capsules</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://arogyabio.com/about</loc>
+    <image:image>
+      <image:loc>https://arogyabio.com/og-image.png</image:loc>
+      <image:title>About ArogyaBio</image:title>
+      <image:caption>Learn about ArogyaBio's mission and values</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://arogyabio.com/contact</loc>
+    <image:image>
+      <image:loc>https://arogyabio.com/og-image.png</image:loc>
+      <image:title>Contact ArogyaBio</image:title>
+      <image:caption>Get in touch with ArogyaBio customer support</image:caption>
     </image:image>
   </url>
 </urlset>
