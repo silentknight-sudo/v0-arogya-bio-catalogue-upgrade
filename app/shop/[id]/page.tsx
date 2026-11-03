@@ -1,310 +1,166 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useParams } from "next/navigation"
+import { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import { useParams, notFound } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import { Button } from "@/components/ui/button"
-import { Heart, ShoppingCart, Truck, Shield, RotateCcw } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
-import Link from "next/link"
-import { ProductSchema } from "@/components/product-schema"
-
-interface Product {
-  id: string
-  name: string
-  price: number
-  description: string
-  image_url: string
-  category: string
-  benefits: string[]
-  usage: string
-  certification: string
-  stock_quantity: number
-}
+import { Reveal, ScrollProgressBar } from "@/components/motion"
+import { getStoreProduct, storeProducts, comboOffer, COMBO_CHECKOUT_URL } from "@/lib/store"
+import { ArrowRight, Check, ShieldCheck, ShoppingBag, Star, Truck, Leaf, ChevronLeft } from "lucide-react"
 
 export default function ProductDetailPage() {
-  const params = useParams()
-  const productId = params.id as string
-  const [product, setProduct] = useState<Product | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [quantity, setQuantity] = useState(1)
-  const [activeTab, setActiveTab] = useState("description")
-  const [user, setUser] = useState<any>(null)
-  const [addedToCart, setAddedToCart] = useState(false)
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
-  const supabase = createClient()
+  const { id } = useParams() as { id: string }
+  const product = getStoreProduct(id)
+  const [active, setActive] = useState(0)
+  const [tab, setTab] = useState<"benefits" | "composition" | "usage">("benefits")
+  if (!product) notFound()
 
-  useEffect(() => {
-    const fetchData = async () => {
-      // Get authenticated user
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser()
-      setUser(authUser)
-
-      // Fetch product
-      const { data: productData } = await supabase.from("products").select("*").eq("id", productId).single()
-
-      if (productData) {
-        setProduct(productData)
-
-        // Fetch related products from same category
-        const { data: related } = await supabase
-          .from("products")
-          .select("*")
-          .eq("category", productData.category)
-          .neq("id", productId)
-          .limit(3)
-
-        setRelatedProducts(related || [])
-      }
-
-      setLoading(false)
-    }
-
-    fetchData()
-  }, [productId])
-
-  const handleAddToCart = async () => {
-    if (!user) {
-      window.location.href = "/auth/login"
-      return
-    }
-
-    try {
-      const { data: existingItem } = await supabase
-        .from("cart_items")
-        .select("id, quantity")
-        .eq("user_id", user.id)
-        .eq("product_id", productId)
-        .maybeSingle()
-
-      if (existingItem) {
-        await supabase
-          .from("cart_items")
-          .update({ quantity: existingItem.quantity + quantity })
-          .eq("id", existingItem.id)
-      } else {
-        await supabase.from("cart_items").insert({
-          user_id: user.id,
-          product_id: productId,
-          quantity: quantity,
-        })
-      }
-
-      setAddedToCart(true)
-      setTimeout(() => setAddedToCart(false), 2000)
-    } catch (error) {
-      console.error("[v0] Error adding to cart:", error)
-    }
-  }
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-background">
-        <Header />
-        <div className="container mx-auto px-4 py-12 text-center">Loading product...</div>
-        <Footer />
-      </main>
-    )
-  }
-
-  if (!product) {
-    return (
-      <main className="min-h-screen bg-background">
-        <Header />
-        <div className="container mx-auto px-4 py-12 text-center">Product not found</div>
-        <Footer />
-      </main>
-    )
+  const other = storeProducts.find((p) => p.id !== product.id)!
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: `Arogya Bio ${product.name}`,
+    image: product.gallery.map((g) => `https://arogyabio.com${g}`),
+    description: product.description,
+    brand: { "@type": "Brand", name: "Arogya Bio" },
   }
 
   return (
-    <main className="min-h-screen bg-background">
-      {product && (
-        <ProductSchema
-          id={product.id}
-          name={product.name}
-          description={product.description}
-          price={product.price}
-          image_url={product.image_url}
-          rating={4.5}
-          reviewCount={100}
-          category={product.category}
-        />
-      )}
+    <main className="min-h-screen bg-[#fbf7ee]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <ScrollProgressBar />
       <Header />
 
-      <div className="container mx-auto px-4 py-8">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-8 text-sm text-muted-foreground">
-          <Link href="/" className="hover:text-foreground">
-            Home
-          </Link>
-          <span>/</span>
-          <Link href="/shop" className="hover:text-foreground">
-            Shop
-          </Link>
-          <span>/</span>
-          <span className="text-foreground">{product.name}</span>
-        </div>
+      <section className="container mx-auto px-4 pt-8 pb-20">
+        <Link href="/shop" className="inline-flex items-center gap-1 text-sm text-[#7a6f58] hover:text-[#2f5d2a]">
+          <ChevronLeft className="w-4 h-4" /> Back to shop
+        </Link>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-          {/* Product Image */}
-          <div className="flex items-center justify-center bg-secondary/30 rounded-lg overflow-hidden aspect-square">
-            <img
-              src={product.image_url || "/placeholder.svg?height=500&width=500&query=ayurvedic-product"}
-              alt={product.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          {/* Product Info */}
-          <div className="space-y-6">
-            <div>
-              <span className="text-primary text-sm font-semibold">{product.category}</span>
-              <h1 className="text-4xl font-bold text-foreground mb-2">{product.name}</h1>
-              <p className="text-muted-foreground text-lg">{product.description}</p>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <span className="text-3xl font-bold text-primary">₹{product.price}</span>
-              <span className="text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full font-semibold">In Stock</span>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <span className="text-foreground font-semibold">Quantity:</span>
-                <div className="flex items-center border border-border rounded-lg">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-2 hover:bg-secondary"
-                  >
-                    -
-                  </button>
-                  <span className="px-6 py-2">{quantity}</span>
-                  <button onClick={() => setQuantity(quantity + 1)} className="px-3 py-2 hover:bg-secondary">
-                    +
-                  </button>
-                </div>
+        <div className="mt-6 grid lg:grid-cols-2 gap-10 lg:gap-16">
+          {/* Gallery */}
+          <div className="lg:sticky lg:top-28 self-start">
+            <Reveal dir="zoom">
+              <div className="relative aspect-square rounded-[2.5rem] bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4] border border-[#eadfc6] overflow-hidden">
+                {product.gallery.map((src, i) => (
+                  <Image
+                    key={src}
+                    src={src}
+                    alt={`${product.name} view ${i + 1}`}
+                    fill
+                    priority={i === 0}
+                    sizes="(max-width:1024px) 100vw, 50vw"
+                    className={`object-contain p-10 transition-all duration-700 ${i === active ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+                  />
+                ))}
               </div>
-
-              <div className="flex gap-4">
-                <Button
-                  onClick={handleAddToCart}
-                  className={`flex-1 py-6 text-base font-semibold flex items-center justify-center gap-2 ${
-                    addedToCart ? "bg-green-600 hover:bg-green-700" : "bg-primary hover:bg-primary/90"
-                  }`}
+            </Reveal>
+            <div className="mt-4 flex gap-3">
+              {product.gallery.map((src, i) => (
+                <button
+                  key={src}
+                  onClick={() => setActive(i)}
+                  className={`relative w-20 h-20 rounded-2xl bg-white border-2 overflow-hidden transition ${i === active ? "border-[#2f5d2a]" : "border-[#eadfc6] opacity-70 hover:opacity-100"}`}
+                  aria-label={`Show view ${i + 1}`}
                 >
-                  <ShoppingCart className="w-5 h-5" />
-                  {addedToCart ? "Added to Cart!" : "Add to Cart"}
-                </Button>
-                <button className="px-6 py-3 border-2 border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors">
-                  <Heart className="w-5 h-5" />
+                  <Image src={src} alt="" fill sizes="80px" className="object-contain p-1.5" />
                 </button>
-              </div>
-            </div>
-
-            {/* Benefits */}
-            <div className="bg-secondary/30 rounded-lg p-4 space-y-3">
-              <div className="flex items-center gap-3">
-                <Truck className="w-5 h-5 text-primary" />
-                <span className="text-sm">Free shipping above ₹2000</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Shield className="w-5 h-5 text-primary" />
-                <span className="text-sm">100% Authentic & Certified</span>
-              </div>
-              <div className="flex items-center gap-3">
-                <RotateCcw className="w-5 h-5 text-primary" />
-                <span className="text-sm">30-day return policy</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Tabs */}
-        <div className="mb-16">
-          <div className="flex gap-4 border-b border-border mb-6">
-            {["description", "benefits", "usage", "certification"].map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`pb-4 font-semibold transition-colors capitalize ${
-                  activeTab === tab
-                    ? "text-primary border-b-2 border-primary -mb-1"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-4">
-            {activeTab === "description" && (
-              <p className="text-foreground text-lg leading-relaxed">{product.description}</p>
-            )}
-
-            {activeTab === "benefits" && (
-              <ul className="space-y-3">
-                {product.benefits?.map((benefit: string, idx: number) => (
-                  <li key={idx} className="flex items-start gap-3 text-foreground">
-                    <span className="text-primary text-xl mt-1">✓</span>
-                    <span>{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {activeTab === "usage" && <p className="text-foreground text-lg leading-relaxed">{product.usage}</p>}
-
-            {activeTab === "certification" && (
-              <div className="flex flex-wrap gap-3">
-                {product.certification?.split(",").map((cert: string, idx: number) => (
-                  <div
-                    key={idx}
-                    className="bg-green-50 border border-green-200 text-green-800 px-4 py-2 rounded-lg font-semibold"
-                  >
-                    {cert.trim()}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold text-foreground mb-8">Related Products</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedProducts.map((prod) => (
-                <Link key={prod.id} href={`/shop/${prod.id}`}>
-                  <div className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
-                    <div className="aspect-square bg-secondary/30 overflow-hidden">
-                      <img
-                        src={prod.image_url || "/placeholder.svg?height=300&width=300"}
-                        alt={prod.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform"
-                      />
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold text-foreground mb-2">{prod.name}</h3>
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-bold text-primary">₹{prod.price}</span>
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{prod.category}</span>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
               ))}
             </div>
           </div>
-        )}
-      </div>
 
+          {/* Info */}
+          <div>
+            <Reveal>
+              <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-700">{product.use}</p>
+              <h1 className="font-display mt-3 text-5xl md:text-6xl font-semibold text-[#1f2d1c]">{product.name}</h1>
+              <div className="mt-3 flex items-center gap-2 text-sm text-[#7a6f58]">
+                <div className="flex">{[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />)}</div>
+                4.9 · Natural Joint Support Formula · {product.size}
+              </div>
+              <p className="mt-6 text-[#5b5240] leading-relaxed">{product.description}</p>
+            </Reveal>
+
+            {/* buy box */}
+            <Reveal className="mt-8">
+              <div className="rounded-3xl bg-[#1f2d1c] text-white p-6 md:p-8 relative overflow-hidden">
+                <div className="absolute -right-16 -top-16 w-56 h-56 rounded-full bg-amber-400/25 blur-3xl" />
+                <p className="relative text-xs font-bold uppercase tracking-widest text-amber-300">Available in the Complete Care Combo</p>
+                <p className="relative mt-2 text-white/75 text-sm">{product.name} + {other.name}</p>
+                <div className="relative mt-4 flex items-end gap-3">
+                  <span className="font-display text-5xl font-semibold text-amber-300">₹{comboOffer.discountedPrice.toLocaleString("en-IN")}</span>
+                  <span className="mb-1 line-through text-white/50">₹{comboOffer.originalPrice.toLocaleString("en-IN")}</span>
+                  <span className="mb-1.5 rounded-full bg-amber-400 text-[#1f2d1c] px-2.5 py-0.5 text-xs font-bold">{comboOffer.discountPercentage}% OFF</span>
+                </div>
+                <Link href={COMBO_CHECKOUT_URL} className="btn-shine relative mt-6 flex items-center justify-center gap-2 rounded-full bg-amber-400 py-4 text-sm font-bold text-[#1f2d1c] hover:bg-amber-300 transition">
+                  <ShoppingBag className="w-4 h-4" /> Buy now
+                </Link>
+                <div className="relative mt-5 grid grid-cols-3 gap-2 text-[11px] text-white/70 text-center">
+                  <span className="flex flex-col items-center gap-1"><Truck className="w-4 h-4" />Free shipping</span>
+                  <span className="flex flex-col items-center gap-1"><ShieldCheck className="w-4 h-4" />GMP certified</span>
+                  <span className="flex flex-col items-center gap-1"><Leaf className="w-4 h-4" />100% Ayurvedic</span>
+                </div>
+              </div>
+            </Reveal>
+
+            {/* tabs */}
+            <Reveal className="mt-10">
+              <div className="flex gap-1 p-1 rounded-full bg-[#f1e4c4] w-fit">
+                {(["benefits", "composition", "usage"] as const).map((t) => (
+                  <button key={t} onClick={() => setTab(t)} className={`px-5 py-2 rounded-full text-sm font-semibold capitalize transition ${tab === t ? "bg-white text-[#1f2d1c] shadow" : "text-[#7a6f58]"}`}>
+                    {t}
+                  </button>
+                ))}
+              </div>
+              <div key={tab} className="mt-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
+                {tab === "benefits" && (
+                  <ul className="grid sm:grid-cols-2 gap-3">
+                    {product.benefits.map((b) => (
+                      <li key={b} className="flex gap-3 rounded-2xl bg-white border border-[#eadfc6] p-4 text-sm text-[#3c3a2a]">
+                        <Check className="w-4 h-4 mt-0.5 text-[#2f5d2a] shrink-0" /> {b}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {tab === "composition" && (
+                  <div className="rounded-2xl bg-white border border-[#eadfc6] divide-y divide-[#f1e4c4]">
+                    {product.composition.map((c) => (
+                      <div key={c.herb} className="flex justify-between gap-4 px-5 py-3 text-sm">
+                        <span className="font-semibold text-[#1f2d1c]">{c.herb}</span>
+                        <span className="text-[#7a6f58] text-right">{c.note}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {tab === "usage" && (
+                  <div className="rounded-2xl bg-white border border-[#eadfc6] p-6 text-sm text-[#3c3a2a] leading-relaxed">
+                    {product.usage}
+                    <p className="mt-4 text-xs text-[#9a8f78]">
+                      Manufactured by Mahatva Ayurveda, Plot No. 33, HSIIDC, Alipur, Distt. Panchkula (Hry.) · Mfg. Lic. No. 1375-ISM(HR) · Marketed by Arogya Bio · FSSAI 22726923000141
+                    </p>
+                  </div>
+                )}
+              </div>
+            </Reveal>
+          </div>
+        </div>
+
+        {/* Pair with */}
+        <Reveal className="mt-24">
+          <Link href={`/shop/${other.id}`} className="group grid md:grid-cols-[200px_1fr_auto] items-center gap-6 rounded-[2rem] bg-white border border-[#eadfc6] p-6 hover:shadow-xl transition">
+            <div className="relative h-48 rounded-2xl bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4]">
+              <Image src={other.image} alt={other.name} fill sizes="200px" className="object-contain p-4 group-hover:scale-105 transition-transform duration-500" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-amber-700">Works best with</p>
+              <h3 className="font-display mt-2 text-3xl font-semibold text-[#1f2d1c]">{other.name}</h3>
+              <p className="mt-2 text-sm text-[#7a6f58]">{other.use} · {other.size}</p>
+            </div>
+            <ArrowRight className="w-6 h-6 text-[#2f5d2a] group-hover:translate-x-2 transition-transform" />
+          </Link>
+        </Reveal>
+      </section>
       <Footer />
     </main>
   )

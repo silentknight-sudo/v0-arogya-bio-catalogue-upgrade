@@ -1,17 +1,17 @@
 import type React from "react"
 import type { Metadata, Viewport } from "next"
 import { Suspense } from "react"
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist, Geist_Mono, Fraunces } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 import { LocalSEOSchema } from "@/components/local-seo-schema"
 import { GoogleAnalytics } from "@/components/google-analytics"
 import { MultipleSchemaMarkup } from "@/components/seo-schema"
-import { GoutPromoPopup } from "@/components/gout-promo-popup"
 import { createOrganizationSchema, createLocalBusinessSchema, createFAQSchema } from "@/lib/seo-schemas"
 
 const _geist = Geist({ subsets: ["latin"] })
 const _geistMono = Geist_Mono({ subsets: ["latin"] })
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-display", display: "swap" })
 
 export const metadata: Metadata = {
   title: "ArogyaBio - Ayurvedic Products Online India | Premium Wellness & Herbal Medicines",
@@ -222,7 +222,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessSchema) }}
         />
       </head>
-      <body className={`font-sans antialiased`}>
+      <body className={`${fraunces.variable} font-sans antialiased`}>
         <Suspense fallback={null}>
           <GoogleAnalytics />
         </Suspense>
@@ -256,7 +256,6 @@ export default function RootLayout({
             ]),
           ]}
         />
-        <GoutPromoPopup />
         {children}
         <Analytics />
       </body>

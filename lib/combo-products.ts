@@ -27,12 +27,12 @@ export interface ComboOffer {
 
 export const goutHealthOil: Product = {
   id: "gout-oil",
-  name: "Gout Health Oil",
+  name: "Gouthealth Oil",
   nameHi: "गाउट हेल्थ ऑयल",
   description:
-    "Premium Ayurvedic oil specially formulated to provide rapid relief from gout pain and inflammation. This powerful blend of natural ingredients and ancient herbs works topically to reduce swelling, improve mobility, and restore joint health. Clinically proven to provide relief within 2 weeks of regular use.",
+    "Premium Ayurvedic oil specially formulated to provide rapid relief from gout pain and inflammation. This powerful blend of natural ingredients and ancient herbs works topically to reduce swelling, improve mobility, and restore joint health.",
   descriptionHi:
-    "गाउट दर्द और सूजन से तेजी से राहत देने के लिए विशेष रूप से तैयार किया गया प्रीमियम आयुर्वेदिक तेल। प्राकृतिक सामग्री और प्राचीन जड़ी-बूटियों का यह शक्तिशाली मिश्रण बाहरी रूप से लगाने पर सूजन को कम करता है, गतिविधि में सुधार करता है और जोड़ों के स्वास्थ्य को बहाल करता है। नियमित उपयोग के 2 सप्ताह में राहत देने के लिए नैदानिक रूप से सिद्ध।",
+    "गाउट दर्द और सूजन से तेजी से राहत देने के लिए विशेष रूप से तैयार किया गया प्रीमियम आयुर्वेदिक तेल। प्राकृतिक सामग्री और प्राचीन जड़ी-बूटियों का यह शक्तिशाली मिश्रण बाहरी रूप से लगाने पर सूजन को कम करता है, गतिविधि में सुधार करता है और जोड़ों के स्वास्थ्य को बहाल करता है।",
   benefits: [
     "Reduces joint inflammation and swelling",
     "Provides fast-acting pain relief",
@@ -53,26 +53,8 @@ export const goutHealthOil: Product = {
     "दैनिक उपयोग के लिए उपयुक्त",
     "प्रमाणित और प्रयोगशाला परीक्षित",
   ],
-  ingredients: [
-    "Ashwagandha",
-    "Turmeric (Curcumin)",
-    "Neem Oil",
-    "Sesame Oil",
-    "Eucalyptus",
-    "Camphor",
-    "Guggul",
-    "Brahmi",
-  ],
-  ingredientsHi: [
-    "अश्वगंधा",
-    "हल्दी (करक्यूमिन)",
-    "नीम का तेल",
-    "तिल का तेल",
-    "यूकेलिप्टस",
-    "कपूर",
-    "गुग्गुल",
-    "ब्राह्मी",
-  ],
+  ingredients: ["Shallaki", "Nirgundi", "Ashwagandha"],
+  ingredientsHi: ["शल्लकी", "निर्गुंडी", "अश्वगंधा"],
   usage:
     "Apply 2-3 tablespoons of oil to the affected joint area. Gently massage in circular motions for 5-10 minutes. Use 2-3 times daily for best results. Can be used with warm water compress for enhanced relief.",
   usageHi:
@@ -82,12 +64,12 @@ export const goutHealthOil: Product = {
 
 export const goutHealthCapsules: Product = {
   id: "gout-capsules",
-  name: "Gout Health Capsules",
+  name: "Gouthealth Capsules",
   nameHi: "गाउट हेल्थ कैप्सूल",
   description:
-    "Advanced Ayurvedic capsules designed to address gout from within. These powerful herbal formulations work to regulate uric acid levels, reduce inflammation, and strengthen joint tissues. Each capsule contains a concentrated blend of 12+ potent Ayurvedic herbs that work synergistically to provide lasting relief from gout symptoms and prevent future flare-ups.",
+    "Advanced Ayurvedic capsules designed to address gout from within. These powerful herbal formulations work to regulate uric acid levels, reduce inflammation, and strengthen joint tissues. Each capsule contains a concentrated blend of 7 potent Ayurvedic herbs — Shallaki, Nirgundi, Rasna, Ashwagandha, Giloy, Ginger and Arandi — that work synergistically to provide lasting relief from gout symptoms and prevent future flare-ups.",
   descriptionHi:
-    "गाउट को अंदर से दूर करने के लिए डिजाइन किए गए उन्नत आयुर्वेदिक कैप्सूल। ये शक्तिशाली हर्बल फॉर्मूलेशन यूरिक एसिड के स्तर को नियंत्रित करने, सूजन को कम करने और जोड़ों के ऊतकों को मजबूत करने के लिए काम करते हैं। प्रत्येक कैप्सूल में 12+ शक्तिशाली आयुर्वेदिक जड़ी-बूटियों का केंद्रित मिश्रण है जो गाउट के लक्षणों से स्थायी राहत प्रदान करते हैं और भविष्य के दौरों को रोकते हैं।",
+    "गाउट को अंदर से दूर करने के लिए डिजाइन किए गए उन्नत आयुर्वेदिक कैप्सूल। ये शक्तिशाली हर्बल फॉर्मूलेशन यूरिक एसिड के स्तर को नियंत्रित करने, सूजन को कम करने और जोड़ों के ऊतकों को मजबूत करने के लिए काम करते हैं। प्रत्येक कैप्सूल में 7 शक्तिशाली आयुर्वेदिक जड़ी-बूटियों का केंद्रित मिश्रण है जो गाउट के लक्षणों से स्थायी राहत प्रदान करते हैं और भविष्य के दौरों को रोकते हैं।",
   benefits: [
     "Regulates and maintains healthy uric acid levels",
     "Reduces acute gout attacks and flare-ups",
@@ -108,38 +90,12 @@ export const goutHealthCapsules: Product = {
     "गाउट के लक्षणों की पुनरावृत्ति को रोकता है",
     "दुष्प्रभाव के बिना 100% प्राकृतिक",
   ],
-  ingredients: [
-    "Chervi (Celery Seeds)",
-    "Guggul",
-    "Turmeric",
-    "Neem",
-    "Cinnamon",
-    "Ginger",
-    "Fenugreek",
-    "Ajwain",
-    "Punarnava",
-    "Triphala",
-    "Ashwagandha",
-    "Brahmi",
-  ],
-  ingredientsHi: [
-    "चेरवी (अजवाइन के बीज)",
-    "गुग्गुल",
-    "हल्दी",
-    "नीम",
-    "दालचीनी",
-    "अदरक",
-    "मेथी",
-    "अजवाइन",
-    "पुनर्नवा",
-    "त्रिफला",
-    "अश्वगंधा",
-    "ब्राह्मी",
-  ],
+  ingredients: ["Shallaki", "Nirgundi", "Rasna", "Ashwagandha", "Giloy", "Ginger", "Arandi"],
+  ingredientsHi: ["शल्लकी", "निर्गुंडी", "रास्ना", "अश्वगंधा", "गिलोय", "अदरक", "अरंडी"],
   usage:
-    "Take 1-2 capsules with warm water after meals, twice daily. For best results, continue for 60-90 days. Consult your healthcare provider for personalized dosage recommendations.",
+    "One capsule a day with warm water, or as directed by the physician. For best results, continue for 60-90 days alongside Gouthealth Oil.",
   usageHi:
-    "भोजन के बाद गर्म पानी के साथ 1-2 कैप्सूल लें, दिन में दो बार। सर्वोत्तम परिणामों के लिए 60-90 दिन तक जारी रखें। व्यक्तिगत खुराक की सिफारिशों के लिए अपने स्वास्थ्य सेवा प्रदाता से परामर्श लें।",
+    "दिन में एक कैप्सूल गर्म पानी के साथ, या चिकित्सक के निर्देशानुसार लें। सर्वोत्तम परिणामों के लिए गाउटहेल्थ ऑयल के साथ 60-90 दिन तक जारी रखें।",
   type: "capsules",
 }
 

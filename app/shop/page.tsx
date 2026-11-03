@@ -1,234 +1,125 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import Image from "next/image"
+import Link from "next/link"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
-import { ShoppingCart } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
-import { useRealtimeProducts } from "@/hooks/use-realtime-products"
-import Link from "next/link"
-
-interface Product {
-  id: string
-  name: string
-  price: number
-  category: string
-  description: string
-  image_url: string
-  rating?: number
-}
+import { Reveal, ScrollProgressBar } from "@/components/motion"
+import { storeProducts, comboOffer, COMBO_CHECKOUT_URL, OIL_IMG, CAPS_IMG } from "@/lib/store"
+import { ArrowRight, Check, Droplet, Pill, ShoppingBag, Truck, ShieldCheck, RotateCcw } from "lucide-react"
 
 export default function ShopPage() {
-  const { products, loading } = useRealtimeProducts()
-  const [sortBy, setSortBy] = useState("popular")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [user, setUser] = useState<any>(null)
-  const [addedToCart, setAddedToCart] = useState<string | null>(null)
-
-  const supabase = createClient()
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { user: authUser },
-      } = await supabase.auth.getUser()
-      setUser(authUser)
-    }
-
-    fetchUser()
-  }, [])
-
-  const categories = Array.from(new Set(products.map((p) => p.category))).sort()
-
-  const filteredProducts =
-    selectedCategory === "all"
-      ? products
-      : products.filter((p) => p.category.toLowerCase() === selectedCategory.toLowerCase())
-
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortBy === "price-low") return a.price - b.price
-    if (sortBy === "price-high") return b.price - a.price
-    if (sortBy === "rating") return (b.rating || 0) - (a.rating || 0)
-    return 0
-  })
-
-  const handleAddToCart = async (productId: string) => {
-    try {
-      if (!user) {
-        // Guest user - use localStorage
-        const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]")
-        const existingItem = guestCart.find((item: any) => item.product_id === productId)
-
-        if (existingItem) {
-          existingItem.quantity += 1
-        } else {
-          guestCart.push({ product_id: productId, quantity: 1 })
-        }
-
-        localStorage.setItem("guestCart", JSON.stringify(guestCart))
-        setAddedToCart(productId)
-        setTimeout(() => setAddedToCart(null), 2000)
-        return
-      }
-
-      // Authenticated user - use database
-      const { data: existingItem } = await supabase
-        .from("cart_items")
-        .select("id, quantity")
-        .eq("user_id", user.id)
-        .eq("product_id", productId)
-        .maybeSingle()
-
-      if (existingItem) {
-        // Update quantity
-        await supabase
-          .from("cart_items")
-          .update({ quantity: existingItem.quantity + 1 })
-          .eq("id", existingItem.id)
-      } else {
-        // Add new item
-        await supabase.from("cart_items").insert({
-          user_id: user.id,
-          product_id: productId,
-          quantity: 1,
-        })
-      }
-
-      setAddedToCart(productId)
-      setTimeout(() => setAddedToCart(null), 2000)
-    } catch (error) {
-      console.error("[v0] Error adding to cart:", error)
-    }
-  }
-
-  if (loading) {
-    return (
-      <main className="min-h-screen bg-background">
-        <Header />
-        <div className="container mx-auto px-4 py-12 text-center">Loading products...</div>
-        <Footer />
-      </main>
-    )
-  }
-
+  const save = comboOffer.originalPrice - comboOffer.discountedPrice
   return (
-    <main className="min-h-screen bg-background">
+    <main className="min-h-screen bg-[#fbf7ee]">
+      <ScrollProgressBar />
       <Header />
 
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-foreground mb-2">Shop Ayurvedic Products</h1>
-        <p className="text-muted-foreground mb-8">Discover our authentic collection of Ayurvedic wellness products</p>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Filters */}
-          <div className="md:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-24">
-              <h3 className="font-bold text-foreground mb-4">Categories</h3>
-              <div className="space-y-2 mb-6">
-                <button
-                  onClick={() => setSelectedCategory("all")}
-                  className={`block w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                    selectedCategory === "all"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary/30 text-foreground hover:bg-secondary/50"
-                  }`}
-                >
-                  All Categories
-                </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat.toLowerCase())}
-                    className={`block w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                      selectedCategory === cat.toLowerCase()
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary/30 text-foreground hover:bg-secondary/50"
-                    }`}
-                  >
-                    {cat}
-                  </button>
-                ))}
-              </div>
-
-              <h3 className="font-bold text-foreground mb-4 pt-6 border-t border-border">Sort By</h3>
-              <div className="space-y-2">
-                {[
-                  { value: "popular", label: "Popular" },
-                  { value: "price-low", label: "Price: Low to High" },
-                  { value: "price-high", label: "Price: High to Low" },
-                  { value: "rating", label: "Highest Rated" },
-                ].map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => setSortBy(option.value)}
-                    className={`block w-full text-left px-4 py-2 rounded-lg transition-colors ${
-                      sortBy === option.value
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary/30 text-foreground hover:bg-secondary/50"
-                    }`}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Products Grid */}
-          <div className="md:col-span-3">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sortedProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-                >
-                  <Link href={`/shop/${product.id}`}>
-                    <div className="aspect-square bg-secondary/30 overflow-hidden cursor-pointer">
-                      <img
-                        src={product.image_url || "/placeholder.svg?height=300&width=300&query=ayurvedic-product"}
-                        alt={product.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform"
-                      />
-                    </div>
-                  </Link>
-
-                  <div className="p-4">
-                    <Link href={`/shop/${product.id}`}>
-                      <h3 className="font-semibold text-foreground mb-2 hover:text-primary transition-colors cursor-pointer">
-                        {product.name}
-                      </h3>
-                    </Link>
-                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{product.description}</p>
-
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-lg font-bold text-primary">₹{product.price}</span>
-                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{product.category}</span>
-                    </div>
-
-                    <button
-                      onClick={() => handleAddToCart(product.id)}
-                      className={`w-full py-2 px-4 rounded-lg font-semibold transition-colors flex items-center justify-center gap-2 ${
-                        addedToCart === product.id
-                          ? "bg-green-600 text-white"
-                          : "bg-primary hover:bg-primary/90 text-primary-foreground"
-                      }`}
-                    >
-                      <ShoppingCart className="w-4 h-4" />
-                      {addedToCart === product.id ? "Added!" : "Add to Cart"}
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {sortedProducts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No products found in this category.</p>
-              </div>
-            )}
-          </div>
+      {/* Intro */}
+      <section className="relative overflow-hidden pt-16 pb-10 md:pt-24">
+        <div className="absolute -top-40 -right-40 w-[520px] h-[520px] rounded-full bg-amber-300/20 blur-3xl" />
+        <div className="container mx-auto px-4 text-center relative">
+          <Reveal>
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-amber-700">The Arogya Bio shop</p>
+            <h1 className="font-display mt-3 text-5xl md:text-7xl font-semibold text-[#1f2d1c]">
+              Active joints, <span className="italic text-gradient-gold">naturally</span>
+            </h1>
+            <p className="mt-5 max-w-xl mx-auto text-[#5b5240]">
+              We focus on doing one thing well: Ayurvedic joint care. Two products that work best together.
+            </p>
+          </Reveal>
         </div>
-      </div>
+      </section>
+
+      {/* Combo hero card */}
+      <section className="container mx-auto px-4">
+        <Reveal dir="zoom">
+          <div className="relative rounded-[2.5rem] bg-[#1f2d1c] text-white overflow-hidden grid lg:grid-cols-2 items-center">
+            <div className="absolute inset-0 opacity-50" style={{ background: "radial-gradient(50% 70% at 80% 50%, rgba(217,148,52,.45), transparent 70%)" }} />
+            <div className="relative p-8 md:p-14">
+              <span className="inline-flex rounded-full bg-amber-400 text-[#1f2d1c] px-3 py-1 text-xs font-bold uppercase tracking-wider">
+                Best value · Save {comboOffer.discountPercentage}%
+              </span>
+              <h2 className="font-display mt-5 text-4xl md:text-5xl font-semibold">Complete Care Combo</h2>
+              <p className="mt-3 text-white/75 max-w-md">Gouthealth Oil (100 ml) + Gouthealth Capsules (30) — outside-in relief and inside-out support.</p>
+              <ul className="mt-6 space-y-2 text-sm text-white/85">
+                {["Both products in one pack", "Free shipping across India", "Cash on delivery available"].map((t) => (
+                  <li key={t} className="flex gap-2"><Check className="w-4 h-4 text-amber-300" /> {t}</li>
+                ))}
+              </ul>
+              <div className="mt-8 flex items-end gap-3">
+                <span className="font-display text-5xl font-semibold text-amber-300">₹{comboOffer.discountedPrice.toLocaleString("en-IN")}</span>
+                <span className="mb-1 text-white/50 line-through">₹{comboOffer.originalPrice.toLocaleString("en-IN")}</span>
+                <span className="mb-1.5 text-xs font-bold text-amber-200">You save ₹{save}</span>
+              </div>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href={COMBO_CHECKOUT_URL} className="btn-shine inline-flex items-center gap-2 rounded-full bg-amber-400 px-8 py-4 text-sm font-bold text-[#1f2d1c] hover:bg-amber-300 transition">
+                  <ShoppingBag className="w-4 h-4" /> Buy the combo
+                </Link>
+                <Link href="/gout-combo" className="inline-flex items-center gap-2 rounded-full border border-white/25 px-8 py-4 text-sm font-semibold hover:bg-white/10 transition">
+                  Learn more
+                </Link>
+              </div>
+            </div>
+            <div className="relative h-[380px] md:h-[480px]">
+              <div className="absolute left-[8%] top-10 w-[45%] h-[80%] animate-float">
+                <Image src={OIL_IMG} alt="Gouthealth Oil" fill sizes="300px" className="object-contain drop-shadow-2xl" />
+              </div>
+              <div className="absolute right-[8%] bottom-6 w-[45%] h-[80%] animate-float-delayed">
+                <Image src={CAPS_IMG} alt="Gouthealth Capsules" fill sizes="300px" className="object-contain drop-shadow-2xl" />
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* Individual products */}
+      <section className="container mx-auto px-4 py-20">
+        <Reveal><h2 className="font-display text-3xl md:text-4xl font-semibold text-[#1f2d1c]">Explore each product</h2></Reveal>
+        <div className="mt-10 grid md:grid-cols-2 gap-8">
+          {storeProducts.map((p, i) => {
+            const Icon = p.type === "oil" ? Droplet : Pill
+            return (
+              <Reveal key={p.id} delay={i * 150}>
+                <Link href={`/shop/${p.id}`} className="group block rounded-[2rem] bg-white border border-[#eadfc6] overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                  <div className="relative aspect-[4/3] bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4]">
+                    <Image src={p.image} alt={p.name} fill sizes="(max-width:768px) 100vw, 50vw" className="object-contain p-8 transition-transform duration-700 group-hover:scale-105" />
+                    <span className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-[#2f5d2a]">
+                      <Icon className="w-3.5 h-3.5" /> {p.size}
+                    </span>
+                  </div>
+                  <div className="p-6 md:p-8">
+                    <p className="text-xs font-bold uppercase tracking-widest text-amber-700">{p.use}</p>
+                    <h3 className="font-display mt-2 text-3xl font-semibold text-[#1f2d1c]">{p.name}</h3>
+                    <p className="mt-2 text-sm text-[#7a6f58]">Natural Joint Support Formula · {p.ingredients.join(" · ")}</p>
+                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-[#2f5d2a] group-hover:gap-3 transition-all">
+                      View details <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </Link>
+              </Reveal>
+            )
+          })}
+        </div>
+
+        <div className="mt-16 grid sm:grid-cols-3 gap-4">
+          {[
+            { icon: Truck, t: "Free shipping", d: "On the Complete Care Combo" },
+            { icon: ShieldCheck, t: "GMP & FSSAI", d: "Manufactured by Mahatva Ayurveda" },
+            { icon: RotateCcw, t: "Easy returns", d: "See our returns policy" },
+          ].map((b, i) => {
+            const Icon = b.icon
+            return (
+              <Reveal key={b.t} delay={i * 100}>
+                <div className="flex items-center gap-4 rounded-2xl bg-white border border-[#eadfc6] p-5">
+                  <span className="grid place-items-center w-11 h-11 rounded-xl bg-[#2f5d2a] text-amber-100"><Icon className="w-5 h-5" /></span>
+                  <div><p className="font-semibold text-[#1f2d1c]">{b.t}</p><p className="text-sm text-[#7a6f58]">{b.d}</p></div>
+                </div>
+              </Reveal>
+            )
+          })}
+        </div>
+      </section>
 
       <Footer />
     </main>

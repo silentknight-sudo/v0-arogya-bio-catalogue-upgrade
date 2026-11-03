@@ -55,15 +55,16 @@ export default function Header() {
 
   const navLinks = [
     { label: "Home", href: "/" },
+    { label: "Gouthealth Oil", href: "/shop/gout-oil" },
+    { label: "Gouthealth Capsules", href: "/shop/gout-capsules" },
     { label: "Shop", href: "/shop" },
-    { label: "Catalogue", href: "/catalogue" },
     { label: "About", href: "/about" },
     { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ]
 
   const comboLink = { 
-    label: "Gout Combo 20% Off", 
+    label: "Complete Care Combo · 20% Off", 
     href: "/gout-combo",
     isSpecial: true 
   }

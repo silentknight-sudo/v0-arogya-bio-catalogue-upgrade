@@ -1,9 +1,9 @@
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Shop - ArogyaBio | Premium Ayurvedic Products Online",
+  title: "Shop Gouthealth Oil & Capsules - ArogyaBio | Ayurvedic Joint Care",
   description:
-    "Shop premium Ayurvedic products at ArogyaBio. Browse certified herbal medicines, natural wellness solutions, and health supplements with detailed product information.",
+    "Shop Arogya Bio Gouthealth Oil and Gouthealth Capsules – Ayurvedic joint support with Shallaki, Nirgundi and Ashwagandha. Save 20% on the Complete Care Combo.",
   keywords: [
     "buy Ayurvedic products",
     "Ayurvedic medicines online",

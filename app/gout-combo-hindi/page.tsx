@@ -36,7 +36,7 @@ export default function GoutComboHindiPage() {
             {/* Hero Image */}
             <div className="order-2 md:order-1">
               <Image
-                src="/gout-combo-hero.jpg"
+                src="/products/gouthealth-banner.png"
                 alt="गाउट हेल्थ कॉम्बो - तेल और कैप्सूल"
                 width={500}
                 height={600}

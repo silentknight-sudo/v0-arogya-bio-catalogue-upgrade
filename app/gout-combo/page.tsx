@@ -36,7 +36,7 @@ export default function GoutComboPageHi() {
             {/* Product Image 1 - Hindi Version */}
             <div className="relative">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/94a5864d-1378-407f-9b05-0486d1d6f9d6%20%281%29-xND51ypNsi7fAHS1Vf1ojArU0IqZWd.png"
+                src="/products/gouthealth-banner.png"
                 alt="गाउट हेल्थ कॉम्बो - आयुर्वेदिक उपचार"
                 width={500}
                 height={700}
@@ -147,7 +147,7 @@ export default function GoutComboPageHi() {
             {/* Product Image 2 - English + Hindi */}
             <div className="relative order-2 md:order-1">
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/673648103_17865948765672766_6839538258943237171_n-1dwJvVexG3geYwuzj7lBbUwwd50CvT.jpg"
+                src="/products/gouthealth-capsules-composition.png"
                 alt="गाउट हेल्थ ऑयल और कैप्सूल - प्रीमियम हड्डी सहायता फॉर्मूला"
                 width={400}
                 height={500}
