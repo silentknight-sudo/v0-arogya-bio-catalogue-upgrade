@@ -10,7 +10,6 @@ import { createBreadcrumbSchema } from "@/lib/seo-schemas"
 import { ScrollProgressBar, Reveal, CountUp, useElementProgress } from "@/components/motion"
 import { GoutHero, BenefitMarquee, GoutStory, GoutProducts, GoutComboCTA } from "@/components/gout-spotlight"
 import { BANNER_IMG, OIL_IMG, CAPS_IMG } from "@/lib/store"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Sun, Moon, CalendarCheck, ShieldCheck, Leaf, FlaskConical, BadgeCheck } from "lucide-react"
 
 const ritual = [
@@ -59,10 +58,11 @@ const faqs = [
 function ParallaxBanner() {
   const { ref, progress } = useElementProgress<HTMLElement>()
   return (
-    <section ref={ref} className="relative py-24 md:py-32 bg-white overflow-hidden">
+    <section ref={ref} data-fx-scope="banner" className="relative py-24 md:py-32 bg-white overflow-hidden">
       <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center">
         <Reveal dir="left">
           <div
+            data-fx="banner"
             className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-[#3c2a10]/15 ring-1 ring-[#eadfc6]"
             style={{ transform: `translateY(${(0.5 - progress) * 50}px)` }}
           >
@@ -180,14 +180,17 @@ export default function Home() {
             <h2 className="font-display mt-3 text-4xl md:text-5xl font-semibold text-[#1f2d1c]">Good to know</h2>
           </Reveal>
           <Reveal className="mt-10">
-            <Accordion type="single" collapsible className="rounded-3xl bg-white border border-[#eadfc6] px-6">
-              {faqs.map((f, i) => (
-                <AccordionItem key={f.q} value={`f${i}`} className="border-[#eadfc6]">
-                  <AccordionTrigger className="text-left font-semibold text-[#1f2d1c] hover:no-underline">{f.q}</AccordionTrigger>
-                  <AccordionContent className="text-[#5b5240] leading-relaxed">{f.a}</AccordionContent>
-                </AccordionItem>
+            <div className="rounded-3xl bg-white border border-[#eadfc6] divide-y divide-[#eadfc6]">
+              {faqs.map((f) => (
+                <details key={f.q} className="group px-6">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 font-semibold text-[#1f2d1c] [&::-webkit-details-marker]:hidden">
+                    {f.q}
+                    <span className="grid place-items-center w-7 h-7 shrink-0 rounded-full bg-[#f4ecd8] text-[#2f5d2a] transition-transform group-open:rotate-45">+</span>
+                  </summary>
+                  <p className="pb-5 text-[#5b5240] leading-relaxed">{f.a}</p>
+                </details>
               ))}
-            </Accordion>
+            </div>
           </Reveal>
           <p className="mt-6 text-center text-xs text-[#9a8f78]">
             Ayurvedic proprietary medicine. Results may vary. Consult your physician if you are pregnant, nursing or on medication.{" "}

@@ -42,10 +42,13 @@ export default function ProductDetailPage() {
           {/* Gallery */}
           <div className="lg:sticky lg:top-28 self-start">
             <Reveal dir="zoom">
-              <div className="relative aspect-square rounded-[2.5rem] bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4] border border-[#eadfc6] overflow-hidden">
+              <div data-gallery className="relative aspect-square rounded-[2.5rem] bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4] border border-[#eadfc6] overflow-hidden">
                 {product.gallery.map((src, i) => (
                   <Image
                     key={src}
+                    data-gimg={i}
+                    data-cls-on="opacity-100 scale-100"
+                    data-cls-off="opacity-0 scale-95"
                     src={src}
                     alt={`${product.name} view ${i + 1}`}
                     fill
@@ -56,10 +59,13 @@ export default function ProductDetailPage() {
                 ))}
               </div>
             </Reveal>
-            <div className="mt-4 flex gap-3">
+            <div data-gallery-thumbs className="mt-4 flex gap-3">
               {product.gallery.map((src, i) => (
                 <button
                   key={src}
+                  data-gthumb={i}
+                  data-cls-on="border-[#2f5d2a]"
+                  data-cls-off="border-[#eadfc6] opacity-70 hover:opacity-100"
                   onClick={() => setActive(i)}
                   className={`relative w-20 h-20 rounded-2xl bg-white border-2 overflow-hidden transition ${i === active ? "border-[#2f5d2a]" : "border-[#eadfc6] opacity-70 hover:opacity-100"}`}
                   aria-label={`Show view ${i + 1}`}
@@ -106,15 +112,17 @@ export default function ProductDetailPage() {
 
             {/* tabs */}
             <Reveal className="mt-10">
+              <div data-tabs>
               <div className="flex gap-1 p-1 rounded-full bg-[#f1e4c4] w-fit">
                 {(["benefits", "composition", "usage"] as const).map((t) => (
-                  <button key={t} onClick={() => setTab(t)} className={`px-5 py-2 rounded-full text-sm font-semibold capitalize transition ${tab === t ? "bg-white text-[#1f2d1c] shadow" : "text-[#7a6f58]"}`}>
+                  <button key={t} data-tab={t} data-cls-on="bg-white text-[#1f2d1c] shadow" data-cls-off="text-[#7a6f58]" onClick={() => setTab(t)} className={`px-5 py-2 rounded-full text-sm font-semibold capitalize transition ${tab === t ? "bg-white text-[#1f2d1c] shadow" : "text-[#7a6f58]"}`}>
                     {t}
                   </button>
                 ))}
               </div>
-              <div key={tab} className="mt-6 animate-in fade-in slide-in-from-bottom-2 duration-500">
-                {tab === "benefits" && (
+              <div className="mt-6">
+                {(
+                  <div data-panel="benefits" hidden={tab !== "benefits"}>
                   <ul className="grid sm:grid-cols-2 gap-3">
                     {product.benefits.map((b) => (
                       <li key={b} className="flex gap-3 rounded-2xl bg-white border border-[#eadfc6] p-4 text-sm text-[#3c3a2a]">
@@ -122,8 +130,10 @@ export default function ProductDetailPage() {
                       </li>
                     ))}
                   </ul>
+                  </div>
                 )}
-                {tab === "composition" && (
+                {(
+                  <div data-panel="composition" hidden={tab !== "composition"}>
                   <div className="rounded-2xl bg-white border border-[#eadfc6] divide-y divide-[#f1e4c4]">
                     {product.composition.map((c) => (
                       <div key={c.herb} className="flex justify-between gap-4 px-5 py-3 text-sm">
@@ -132,15 +142,19 @@ export default function ProductDetailPage() {
                       </div>
                     ))}
                   </div>
+                  </div>
                 )}
-                {tab === "usage" && (
+                {(
+                  <div data-panel="usage" hidden={tab !== "usage"}>
                   <div className="rounded-2xl bg-white border border-[#eadfc6] p-6 text-sm text-[#3c3a2a] leading-relaxed">
                     {product.usage}
                     <p className="mt-4 text-xs text-[#9a8f78]">
                       Manufactured by Mahatva Ayurveda, Plot No. 33, HSIIDC, Alipur, Distt. Panchkula (Hry.) · Mfg. Lic. No. 1375-ISM(HR) · Marketed by Arogya Bio · FSSAI 22726923000141
                     </p>
                   </div>
+                  </div>
                 )}
+              </div>
               </div>
             </Reveal>
           </div>

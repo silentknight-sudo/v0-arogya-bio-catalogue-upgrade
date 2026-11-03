@@ -29,10 +29,11 @@ export function GoutHero() {
   const p = progress
 
   return (
-    <section ref={ref} className="relative h-[170vh] bg-[#1d2a1b]">
+    <section ref={ref} data-fx-scope="hero" className="relative h-[170vh] bg-[#1d2a1b]">
       <div className="sticky top-0 h-screen overflow-hidden grain">
         {/* parallax background */}
         <div
+          data-fx="hero-bg"
           className="absolute inset-0 will-change-transform"
           style={{ transform: `scale(${1.08 + p * 0.25}) translateY(${p * -6}%)` }}
         >
@@ -43,7 +44,7 @@ export function GoutHero() {
 
         <div className="relative z-10 container mx-auto px-4 h-full grid lg:grid-cols-2 items-center gap-10 pt-16">
           {/* headline */}
-          <div style={{ opacity: 1 - p * 1.6, transform: `translateY(${p * -120}px)` }}>
+          <div data-fx="hero-copy" style={{ opacity: 1 - p * 1.6, transform: `translateY(${p * -120}px)` }}>
             <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-white/10 backdrop-blur px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.25em] text-amber-200">
               <Leaf className="w-3.5 h-3.5" /> Natural care for
             </span>
@@ -84,6 +85,7 @@ export function GoutHero() {
           {/* floating products */}
           <div className="relative hidden lg:block h-[560px]">
             <div
+              data-fx="hero-oil"
               className="absolute left-4 top-10 w-[300px]"
               style={{ transform: `translate(${p * -80}px, ${p * 140}px) rotate(${-6 + p * -10}deg)` }}
             >
@@ -92,6 +94,7 @@ export function GoutHero() {
               </div>
             </div>
             <div
+              data-fx="hero-caps"
               className="absolute right-0 bottom-0 w-[300px]"
               style={{ transform: `translate(${p * 80}px, ${p * -60}px) rotate(${6 + p * 10}deg)` }}
             >
@@ -104,6 +107,7 @@ export function GoutHero() {
 
         {/* scroll cue */}
         <div
+          data-fx="hero-cue"
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2 text-white/70 text-[11px] tracking-[0.3em] uppercase"
           style={{ opacity: 1 - p * 4 }}
         >
@@ -162,10 +166,11 @@ export function GoutStory() {
   const stage = progress < 0.5 ? 0 : 1
 
   return (
-    <section id="gout-story" ref={ref} className="relative h-[300vh] bg-[#fbf7ee]">
+    <section id="gout-story" ref={ref} data-fx-scope="story" className="relative h-[300vh] bg-[#fbf7ee]">
       <div className="sticky top-0 h-screen overflow-hidden">
         {/* soft background blobs */}
         <div
+          data-fx="story-blob"
           className="absolute -left-40 top-20 w-[520px] h-[520px] rounded-full blur-3xl transition-colors duration-1000"
           style={{ background: stage === 0 ? "rgba(217,148,52,0.25)" : "rgba(47,93,42,0.18)" }}
         />
@@ -177,6 +182,8 @@ export function GoutStory() {
             {[OIL_IMG, CAPS_IMG].map((src, i) => (
               <div
                 key={src}
+                data-fx="story-img"
+                data-i={i}
                 className="absolute inset-0 rounded-[2.5rem] overflow-hidden bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4] shadow-2xl shadow-[#3c2a10]/20 transition-all duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
                 style={{
                   opacity: stage === i ? 1 : 0,
@@ -200,6 +207,8 @@ export function GoutStory() {
               {[0, 1].map((i) => (
                 <span
                   key={i}
+                  data-fx="story-dot"
+                  data-i={i}
                   className={`h-1.5 rounded-full transition-all duration-500 ${
                     stage === i ? "w-10 bg-[#2f5d2a]" : "w-4 bg-[#2f5d2a]/25"
                   }`}
@@ -212,6 +221,8 @@ export function GoutStory() {
           <div className="relative min-h-[420px]">
             {/* Oil */}
             <div
+              data-fx="story-copy"
+              data-i={0}
               className="absolute inset-0 transition-all duration-700"
               style={{
                 opacity: stage === 0 ? 1 : 0,
@@ -232,6 +243,8 @@ export function GoutStory() {
                 {oilHerbs.map((h, i) => (
                   <li
                     key={h.n}
+                    data-fx="story-item"
+                    data-i={0}
                     className="flex items-start gap-4 rounded-2xl bg-white/70 backdrop-blur border border-[#eadfc6] p-4 transition-all duration-700"
                     style={{
                       transitionDelay: `${i * 120}ms`,
@@ -253,6 +266,8 @@ export function GoutStory() {
 
             {/* Capsules */}
             <div
+              data-fx="story-copy"
+              data-i={1}
               className="absolute inset-0 transition-all duration-700"
               style={{
                 opacity: stage === 1 ? 1 : 0,
@@ -273,6 +288,8 @@ export function GoutStory() {
                 {capHerbs.map((h, i) => (
                   <div
                     key={h}
+                    data-fx="story-item"
+                    data-i={1}
                     className="rounded-2xl bg-white/70 border border-emerald-900/10 px-3 py-4 text-center transition-all duration-700"
                     style={{
                       transitionDelay: `${i * 70}ms`,
@@ -299,10 +316,11 @@ export function GoutStory() {
 function Gallery({ images, alt }: { images: string[]; alt: string }) {
   const [i, setI] = useState(0)
   return (
-    <div className="relative aspect-square overflow-hidden bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4]">
+    <div data-gallery className="relative aspect-square overflow-hidden bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4]">
       {images.map((src, k) => (
         <Image
           key={src}
+          data-gimg={k}
           src={src}
           alt={`${alt} view ${k + 1}`}
           fill
@@ -316,6 +334,7 @@ function Gallery({ images, alt }: { images: string[]; alt: string }) {
         {images.map((src, k) => (
           <button
             key={src}
+            data-gthumb={k}
             aria-label={`Show view ${k + 1}`}
             onClick={() => setI(k)}
             className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 bg-white transition ${
@@ -336,7 +355,6 @@ export function GoutProducts() {
     { key: "oil" as const, img: OIL_IMG, gallery: OIL_GALLERY, data: goutHealthOil, tag: "For external use", icon: Droplet },
     { key: "caps" as const, img: CAPS_IMG, gallery: CAPS_GALLERY, data: goutHealthCapsules, tag: "For internal use", icon: Pill },
   ]
-  const active = products.find((p) => p.key === tab)!
 
   return (
     <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#fbf7ee] to-white overflow-hidden">
@@ -386,10 +404,12 @@ export function GoutProducts() {
         <Reveal className="mt-16 max-w-4xl mx-auto">
           <div className="rounded-[2rem] bg-[#1f2d1c] text-white p-6 md:p-10 relative overflow-hidden">
             <div className="absolute -right-24 -top-24 w-72 h-72 rounded-full bg-amber-400/20 blur-3xl" />
+            <div data-tabs className="relative">
             <div className="relative flex gap-2 p-1 rounded-full bg-white/10 w-fit">
               {products.map((p) => (
                 <button
                   key={p.key}
+                  data-tab={p.key}
                   onClick={() => setTab(p.key)}
                   className={`px-5 py-2 rounded-full text-sm font-semibold transition ${
                     tab === p.key ? "bg-amber-400 text-[#1f2d1c]" : "text-white/80 hover:text-white"
@@ -399,22 +419,30 @@ export function GoutProducts() {
                 </button>
               ))}
             </div>
-            <div key={tab} className="relative mt-8 grid md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-amber-300">Key benefits</p>
-                <ul className="mt-4 space-y-3">
-                  {active.data.benefits.slice(0, 6).map((b) => (
-                    <li key={b} className="flex gap-3 text-sm text-white/85">
-                      <Check className="w-4 h-4 mt-0.5 text-amber-300 shrink-0" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
+            {products.map((p) => (
+              <div
+                key={p.key}
+                data-panel={p.key}
+                hidden={tab !== p.key}
+                className="relative mt-8 grid md:grid-cols-2 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500"
+              >
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-amber-300">Key benefits</p>
+                  <ul className="mt-4 space-y-3">
+                    {p.data.benefits.slice(0, 6).map((b) => (
+                      <li key={b} className="flex gap-3 text-sm text-white/85">
+                        <Check className="w-4 h-4 mt-0.5 text-amber-300 shrink-0" />
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-amber-300">How to use</p>
+                  <p className="mt-4 text-sm text-white/85 leading-relaxed">{p.data.usage}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-xs font-bold uppercase tracking-widest text-amber-300">How to use</p>
-                <p className="mt-4 text-sm text-white/85 leading-relaxed">{active.data.usage}</p>
-              </div>
+            ))}
             </div>
           </div>
         </Reveal>
@@ -427,8 +455,9 @@ export function GoutComboCTA() {
   const { ref, progress } = useElementProgress<HTMLElement>()
   const save = comboOffer.originalPrice - comboOffer.discountedPrice
   return (
-    <section ref={ref} className="relative py-24 md:py-32 overflow-hidden bg-[#13200f] text-white grain">
+    <section ref={ref} data-fx-scope="cta" className="relative py-24 md:py-32 overflow-hidden bg-[#13200f] text-white grain">
       <div
+        data-fx="cta-bg"
         className="absolute inset-0 opacity-40"
         style={{
           background:
@@ -474,12 +503,14 @@ export function GoutComboCTA() {
 
         <Reveal dir="right" className="relative h-[460px] md:h-[520px]">
           <div
+            data-fx="cta-oil"
             className="absolute left-0 top-0 w-[62%] rounded-[2rem] overflow-hidden bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4] p-4 shadow-2xl ring-1 ring-white/10"
             style={{ transform: `translateY(${(0.5 - progress) * 60}px) rotate(-4deg)` }}
           >
             <Image src={OIL_IMG} alt="Gouthealth Oil" width={600} height={900} className="w-full h-[340px] object-contain" />
           </div>
           <div
+            data-fx="cta-caps"
             className="absolute right-0 bottom-0 w-[62%] rounded-[2rem] overflow-hidden bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4] p-4 shadow-2xl ring-1 ring-white/10"
             style={{ transform: `translateY(${(progress - 0.5) * 60}px) rotate(4deg)` }}
           >

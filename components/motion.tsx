@@ -89,6 +89,7 @@ export function ScrollProgressBar() {
   return (
     <div className="fixed inset-x-0 top-0 z-[60] h-1 pointer-events-none">
       <div
+        data-progress-bar
         className="h-full origin-left bg-gradient-to-r from-emerald-600 via-amber-500 to-emerald-700"
         style={{ transform: `scaleX(${p})` }}
       />
@@ -118,7 +119,7 @@ export function CountUp({ to, suffix = "", duration = 1600 }: { to: number; suff
     return () => io.disconnect()
   }, [to, duration])
   return (
-    <span ref={ref}>
+    <span ref={ref} data-count={to} data-suffix={suffix}>
       {val.toLocaleString("en-IN")}
       {suffix}
     </span>
