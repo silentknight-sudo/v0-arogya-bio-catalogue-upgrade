@@ -5,7 +5,8 @@ import Link from "next/link"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { Reveal, ScrollProgressBar } from "@/components/motion"
-import { storeProducts, comboOffer, COMBO_CHECKOUT_URL, OIL_IMG, CAPS_IMG } from "@/lib/store"
+import { Spin360 } from "@/components/spin-360"
+import { storeProducts, comboOffer, COMBO_CHECKOUT_URL } from "@/lib/store"
 import { ArrowRight, Check, Droplet, Pill, ShoppingBag, Truck, ShieldCheck, RotateCcw } from "lucide-react"
 
 export default function ShopPage() {
@@ -62,11 +63,10 @@ export default function ShopPage() {
               </div>
             </div>
             <div className="relative h-[380px] md:h-[480px]">
-              <div className="absolute left-[8%] top-10 w-[45%] h-[80%] animate-float">
-                <Image src={OIL_IMG} alt="Gouthealth Oil" fill sizes="300px" className="object-contain drop-shadow-2xl" />
-              </div>
-              <div className="absolute right-[8%] bottom-6 w-[45%] h-[80%] animate-float-delayed">
-                <Image src={CAPS_IMG} alt="Gouthealth Capsules" fill sizes="300px" className="object-contain drop-shadow-2xl" />
+              <div className="absolute inset-x-[10%] top-[12%] bottom-[8%] rounded-full blur-3xl animate-glow" style={{ background: "radial-gradient(circle, rgba(240,180,74,.4), transparent 70%)" }} />
+              <div className="absolute inset-0 flex items-center justify-center gap-2 md:gap-6 py-8">
+                <Spin360 product="oil" mode="auto" speed={22} className="h-[88%] drop-shadow-[0_30px_30px_rgba(0,0,0,0.5)]" />
+                <Spin360 product="capsules" mode="auto" speed={-22} className="h-[74%] self-end mb-[6%] drop-shadow-[0_30px_30px_rgba(0,0,0,0.5)]" />
               </div>
             </div>
           </div>

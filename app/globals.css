@@ -250,3 +250,24 @@
   .reveal { opacity: 1; transform: none; filter: none; transition: none; }
   .animate-float, .animate-float-delayed, .animate-marquee { animation: none; }
 }
+
+/* ---------- 360° spin + showcase ---------- */
+.spin360.is-dragging { cursor: grabbing; }
+.spin360 .spin-hint { transition: opacity .4s ease; }
+.spin360:hover .spin-hint, .spin360.is-dragging .spin-hint { opacity: 0; }
+[data-spin-callout] {
+  opacity: .28;
+  transform: translateX(var(--callout-shift, 16px));
+  transition: opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1), border-color .4s ease, background-color .4s ease;
+}
+[data-spin-callout].is-active { opacity: 1; transform: none; }
+[data-spin-callout] .callout-dot { transition: transform .4s ease, background-color .4s ease; }
+[data-spin-callout].is-active .callout-dot { transform: scale(1.35); }
+@keyframes glow-pulse { 0%,100% { opacity: .55; transform: scale(1); } 50% { opacity: .85; transform: scale(1.06); } }
+.animate-glow { animation: glow-pulse 6s ease-in-out infinite; }
+@keyframes drift { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(-110vh) rotate(260deg); } }
+.leaf-drift { animation: drift linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  [data-spin-callout] { opacity: 1; transform: none; }
+  .animate-glow, .leaf-drift { animation: none; }
+}

@@ -1,0 +1,65 @@
+<!doctype html>
+<html><body style="margin:0;background:transparent">
+<canvas id="c" width="720" height="1080"></canvas>
+<script type="importmap">{"imports":{"three":"./three.module.js"}}</script>
+<script type="module">
+import * as THREE from "three"
+const params = new URLSearchParams(location.search)
+const name = params.get("p")
+const profile = await (await fetch(`./${name}-profile.json`)).json()
+const canvas = document.getElementById("c")
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, preserveDrawingBuffer: true })
+renderer.setPixelRatio(1)
+renderer.outputColorSpace = THREE.LinearSRGBColorSpace
+const scene = new THREE.Scene()
+const camera = new THREE.PerspectiveCamera(18, 720 / 1080, 0.1, 50)
+camera.position.set(0, 0.12, 4.1)
+camera.lookAt(0, 0, 0)
+
+const tex = await new THREE.TextureLoader().loadAsync(`./${name}-texture.png`)
+tex.colorSpace = THREE.NoColorSpace
+tex.wrapS = THREE.RepeatWrapping
+tex.anisotropy = 8
+// lathe profile: x = radius, y = height (top of product = 1 -> flip so top is up)
+const pts = profile.points.map(([r, v]) => new THREE.Vector2(Math.max(r, 0.0001), 0.5 - v))
+const geo = new THREE.LatheGeometry(pts, 256)
+// LatheGeometry v runs along the profile; we sample rows by height instead
+const pos = geo.attributes.position, uv = geo.attributes.uv
+for (let i = 0; i < pos.count; i++) {
+  uv.setY(i, 0.5 + pos.getY(i)) // texture top row = product top
+}
+geo.computeVertexNormals()
+const mat = new THREE.ShaderMaterial({
+  uniforms: { map: { value: tex }, glass: { value: name === "oil" ? 1 : 0 } },
+  vertexShader: `
+    varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+    void main(){ vUv = uv; vec4 mv = modelViewMatrix * vec4(position,1.);
+      vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
+  fragmentShader: `
+    uniform sampler2D map; uniform float glass;
+    varying vec2 vUv; varying vec3 vN; varying vec3 vV;
+    void main(){
+      vec2 uv = vec2(fract(1.5 - vUv.x), vUv.y);
+      vec3 c = texture2D(map, uv).rgb;
+      vec3 n = normalize(vN);
+      vec3 L = normalize(vec3(-0.55, 0.35, 1.0));
+      float diff = 0.80 + 0.26 * max(dot(n, L), 0.0);
+      float rim = pow(1.0 - max(dot(n, vV), 0.0), 2.2);
+      c *= diff * (1.0 - 0.42 * rim);
+      vec3 R = reflect(-L, n);
+      float spec = pow(max(dot(R, vV), 0.0), glass > 0.5 ? 60.0 : 28.0) * (glass > 0.5 ? 0.55 : 0.25);
+      c += spec;
+      gl_FragColor = vec4(c, 1.0);
+    }`,
+})
+const mesh = new THREE.Mesh(geo, mat)
+// scale so the product height is 1 and it sits centred
+scene.add(mesh)
+window.renderAngle = (deg) => {
+  mesh.rotation.y = -deg * Math.PI / 180
+  renderer.render(scene, camera)
+  return canvas.toDataURL("image/png")
+}
+window.ready = true
+</script>
+</body></html>

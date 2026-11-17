@@ -7,13 +7,14 @@ import { useParams, notFound } from "next/navigation"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { Reveal, ScrollProgressBar } from "@/components/motion"
+import { Spin360 } from "@/components/spin-360"
 import { getStoreProduct, storeProducts, comboOffer, COMBO_CHECKOUT_URL } from "@/lib/store"
 import { ArrowRight, Check, ShieldCheck, ShoppingBag, Star, Truck, Leaf, ChevronLeft } from "lucide-react"
 
 export default function ProductDetailPage() {
   const { id } = useParams() as { id: string }
   const product = getStoreProduct(id)
-  const [active, setActive] = useState(0)
+  const [active, setActive] = useState<number | "spin">("spin")
   const [tab, setTab] = useState<"benefits" | "composition" | "usage">("benefits")
   if (!product) notFound()
 
@@ -43,6 +44,15 @@ export default function ProductDetailPage() {
           <div className="lg:sticky lg:top-28 self-start">
             <Reveal dir="zoom">
               <div data-gallery className="relative aspect-square rounded-[2.5rem] bg-gradient-to-b from-[#fffaf0] to-[#f1e4c4] border border-[#eadfc6] overflow-hidden">
+                <div
+                  data-gimg="spin"
+                  data-cls-on="opacity-100"
+                  data-cls-off="opacity-0 pointer-events-none"
+                  className={`absolute inset-0 flex items-center justify-center p-8 transition-opacity duration-700 ${active === "spin" ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                >
+                  <div className="absolute w-2/3 aspect-square rounded-full blur-3xl animate-glow bg-[radial-gradient(circle,rgba(217,148,52,.35),transparent_70%)]" />
+                  <Spin360 product={product.type === "oil" ? "oil" : "capsules"} mode="auto" speed={20} className="relative h-full" hint />
+                </div>
                 {product.gallery.map((src, i) => (
                   <Image
                     key={src}
@@ -52,14 +62,23 @@ export default function ProductDetailPage() {
                     src={src}
                     alt={`${product.name} view ${i + 1}`}
                     fill
-                    priority={i === 0}
                     sizes="(max-width:1024px) 100vw, 50vw"
-                    className={`object-contain p-10 transition-all duration-700 ${i === active ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+                    className={`object-contain p-10 pointer-events-none transition-all duration-700 ${i === active ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
                   />
                 ))}
               </div>
             </Reveal>
             <div data-gallery-thumbs className="mt-4 flex gap-3">
+              <button
+                data-gthumb="spin"
+                data-cls-on="border-[#2f5d2a]"
+                data-cls-off="border-[#eadfc6] opacity-70 hover:opacity-100"
+                onClick={() => setActive("spin")}
+                className={`relative w-20 h-20 rounded-2xl bg-[#1f2d1c] text-amber-300 text-sm font-bold border-2 transition ${active === "spin" ? "border-[#2f5d2a]" : "border-[#eadfc6] opacity-70 hover:opacity-100"}`}
+                aria-label="Show 360 degree view"
+              >
+                360°
+              </button>
               {product.gallery.map((src, i) => (
                 <button
                   key={src}
